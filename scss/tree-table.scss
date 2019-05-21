@@ -1,0 +1,40 @@
+tr.has-child {
+  cursor: pointer;
+}
+
+.tt-details-control.has-child {
+
+  .expander {
+    display: inline-block;
+    position: relative;
+    color: transparent;
+    margin: 0 10px;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%) rotate(-90deg);
+      transform: translate(-50%, -50%) rotate(-90deg);
+      border-left: 5.04px solid transparent;
+      border-right: 5.04px solid transparent;
+      border-top: 7px solid rgba(0, 0, 0, 0.8);
+      transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+      cursor: pointer;
+    }
+  }
+}
+
+.open {
+  .tt-details-control.has-child {
+
+    .expander::after {
+      -webkit-transform: translate(-50%, -50%) rotate(0);
+      transform: translate(-50%, -50%) rotate(0);
+    }
+  }
+}
