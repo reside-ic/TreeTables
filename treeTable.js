@@ -29,7 +29,7 @@
         if (!a || !b) {
             return 0
         }
-        if (a.key !== b.key) {
+        if (a.tt_key !== b.tt_key) {
             return ((a.value < b.value) ? 1 : ((a.value > b.value) ? -1 : 0));
         } else if (typeof a.child === 'undefined' && typeof b.child === 'undefined') {
             return ((a.value < b.value) ? 1 : ((a.value > b.value) ? -1 : 0));
@@ -44,7 +44,7 @@
         if (!a || !b) {
             return 0
         }
-        if (a.key !== b.key) {
+        if (a.tt_key !== b.tt_key) {
             return ((a.value < b.value) ? -1 : ((a.value > b.value) ? 1 : 0));
         } else if (typeof a.child === 'undefined' && typeof b.child === 'undefined') {
             return ((a.value < b.value) ? -1 : ((a.value > b.value) ? 1 : 0));
@@ -97,11 +97,11 @@
             "width": 50
         }].concat(options.columns).concat([
             {
-                "data": "key",
+                "data": "tt_key",
                 "visible": false
             },
             {
-                "data": "parent",
+                "data": "tt_parent",
                 "visible": false
             },
             {
@@ -127,7 +127,7 @@
             }
         }).DataTable(options);
 
-        this.$el.find('tbody').on('click', 'tr.has-child', function () {
+        this.$el.find('tbody').on('click', 'tr.has-child', function() {
             self.toggleChildRows($(this))
         });
 
@@ -142,7 +142,7 @@
     TreeTable.prototype.toggleChildRows = function ($tr) {
 
         const row = this.dt.row($tr);
-        const key = row.data().key;
+        const key = row.data().tt_key;
 
         if (this.collapsed.has(key)) {
             this.collapsed.delete(key);
@@ -159,7 +159,7 @@
         dt.rows().eq(0).filter((rowIdx) => {
             const row = dt.row(rowIdx).data();
             if (row.hasChild) {
-                this.collapsed.add(row.key);
+                this.collapsed.add(row.tt_key);
             }
         });
     };
@@ -188,7 +188,7 @@
 
     TreeTable.prototype.hasParent = function (rowIdx, parentRegex) {
         const rowData = this.dt.row(rowIdx).data();
-        const p = rowData['parent'];
+        const p = rowData['tt_parent'];
         if (p === 0) return false;
         if (parentRegex.test(p.toString())) return true;
         const parentIdx = this.getIdxForKey(p);
@@ -202,7 +202,7 @@
 
         const rowData = this.dt.row(rowIdx).data();
 
-        const parentKey = rowData['parent'];
+        const parentKey = rowData['tt_parent'];
         let parent = {};
         if (parentKey > 0) {
             const parentIdx = this.getIdxForKey(parentKey);
@@ -213,7 +213,7 @@
             a = a.child;
         }
         a.child = {};
-        a.child.key = rowData['key'];
+        a.child.tt_key = rowData['tt_key'];
         a.child.value = rowData[column];
         return parent;
 
@@ -222,7 +222,7 @@
     TreeTable.prototype.getIdxForKey = function (key) {
         return this.dt.rows().eq(0).filter((rowIdx) => {
             const row = this.dt.row(rowIdx).data();
-            return row.key === key;
+            return row.tt_key === key;
         })[0];
     };
 

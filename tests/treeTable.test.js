@@ -3,13 +3,12 @@ require('datatables.net')(window, $);
 require("../treeTable")(window, $);
 
 const fakeData = [
-    {key: 1, parent: 0, name: "first-parent", hasChild: true},
-    {key: 2, parent: 1, name: "first-child", hasChild: true},
-    {key: 3, parent: 2, name: "second-child", hasChild: false},
-    {key: 4, parent: 0, name: "no-children", hasChild: false}];
+    {"tt_key": 1, "tt_parent": 0, name: "first-parent", hasChild: true},
+    {"tt_key": 2, "tt_parent": 1, name: "first-child", hasChild: true},
+    {"tt_key": 3, "tt_parent": 2, name: "second-child", hasChild: false},
+    {"tt_key": 4, "tt_parent": 0, name: "no-children", hasChild: false}];
 
-const headers = "<thead><th></th>\n" +
-    "        <th>Key</th>\n" +
+const headers = "<thead><th>Key</th>\n" +
     "        <th>Parent</th>\n" +
     "        <th>HasChild</th>\n" +
     "        <th>Name</th></thead>";
@@ -78,10 +77,10 @@ test('rows with children have has-child css class', () => {
 test('rows are sorted by top level parents first', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, name: "b", hasChild: false},
-        {key: 2, parent: 4, name: "f", hasChild: false},
-        {key: 3, parent: 4, name: "d", hasChild: false},
-        {key: 4, parent: 0, name: "a", hasChild: true}];
+        {"tt_key": 1, "tt_parent": 0, name: "b", hasChild: false},
+        {"tt_key": 2, "tt_parent": 4, name: "f", hasChild: false},
+        {"tt_key": 3, "tt_parent": 4, name: "d", hasChild: false},
+        {"tt_key": 4, "tt_parent": 0, name: "a", hasChild: true}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -103,10 +102,10 @@ test('rows are sorted by top level parents first', () => {
 test('rows are sorted initially if order option is provided', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, name: "b", hasChild: false},
-        {key: 2, parent: 4, name: "f", hasChild: false},
-        {key: 3, parent: 4, name: "d", hasChild: false},
-        {key: 4, parent: 0, name: "a", hasChild: true}];
+        {"tt_key": 1, "tt_parent": 0, name: "b", hasChild: false},
+        {"tt_key": 2, "tt_parent": 4, name: "f", hasChild: false},
+        {"tt_key": 3, "tt_parent": 4, name: "d", hasChild: false},
+        {"tt_key": 4, "tt_parent": 0, name: "a", hasChild: true}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -128,9 +127,9 @@ test('rows are sorted initially if order option is provided', () => {
 test('nested child rows are hidden when their parent is', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, name: "parent", hasChild: true},
-        {key: 2, parent: 1, name: "child", hasChild: true},
-        {key: 3, parent: 2, name: "grandchild", hasChild: false}
+        {"tt_key": 1, "tt_parent": 0, name: "parent", hasChild: true},
+        {"tt_key": 2, "tt_parent": 1, name: "child", hasChild: true},
+        {"tt_key": 3, "tt_parent": 2, name: "grandchild", hasChild: false}
     ];
 
     const $table = $(document.createElement('table'));
