@@ -4,6 +4,7 @@
   "description": "jquery plugin extending jquery-datatables to support tree data",
   "main": "treeTable.js",
   "scripts": {
+    "compile": "gulp sass",
     "test": "jest"
   },
   "repository": {

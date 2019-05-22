@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- 10
+before_script:
+- npm install codecov -g
+- npm install
+- npm run compile
+after_success:
+- codecov -f coverage/*.json
