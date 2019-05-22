@@ -5,21 +5,23 @@ popular [DataTables](https://github.com/DataTables/DataTables) plugin.
 DataTables does not support tree data by default, so this plugin adds
 that support.
 
-## Usage
+## Installation options
+1. Download:
+    First download the base DataTables scripts here: https://datatables.net/download/
+    Then also download this repo and include the following scripts on your page:
 
-Include the following scripts on your page:
+    ```
+    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="treeTable.js"></script>
+    ```
 
-```
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/datatables.net/js/jquery.dataTables.js"></script>
-<script src="treeTable.js"></script>
-```
+    And the following css in your document head:
+    ```
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="tree-table.css"/>
+    ```
 
-And the following css in your document head:
-```
-    <link rel="stylesheet" href="node_modules/datatables.net-dt/css/jquery.dataTables.css"/>
-    <link rel="stylesheet" href="tree-table.css"/>
-```
+2. npm: `npm install @reside-ic/tree-table`
 
 ## Basic Usage
 

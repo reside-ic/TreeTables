@@ -1,8 +1,8 @@
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD
-        define(['jquery', 'datatables.net'], function ($) {
-            return factory($, window, document);
+        define(['jquery', 'datatables.net'], function ($, dt) {
+            return factory(dt.$, window, document);
         });
     }
     else if (typeof exports === 'object') {
