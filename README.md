@@ -25,10 +25,10 @@ And the following css in your document head:
 
 ```
  const organisationData = [
-            {key: 1, parent: 0, level: 0, name: "CEO", hasChild: true},
-            {key: 2, parent: 1, level: 1, name: "CTO", hasChild: true},
-            {key: 3, parent: 2, level: 2, name: "developer", hasChild: false},
-            {key: 4, parent: 1, level: 1, name: "CFO", hasChild: false}
+            {key: 1, parent: 0, name: "CEO", hasChild: true},
+            {key: 2, parent: 1, name: "CTO", hasChild: true},
+            {key: 3, parent: 2, name: "developer", hasChild: false},
+            {key: 4, parent: 1, name: "CFO", hasChild: false}
         ];
 
         $('#my-table').treeTable({
@@ -44,8 +44,6 @@ And the following css in your document head:
 Data provided to the table must include the following fields:
 * key: number - a unique row identifier
 * parent: number - the key of this row's parent row
-* level: number - how deeply nested is this row (a row with no parent is level 0,
-a row with a parent is level 1, a row with a grandparent is level 2, etc)
 * hasChild: bool - does this row have any children
 
 ### Options
@@ -74,7 +72,6 @@ E.g., this table will be initially sorted by name:
 ```
         $('#my-table').treeTable({
             "data": myData,
-            "collapsed": true,
             "columns": [
                 {
                     "data": "name"
