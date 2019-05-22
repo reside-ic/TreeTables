@@ -100,7 +100,7 @@ above table by salary:
  $('#my-table').DataTable().order([ 5, 'asc' ])
  ```
 
-## Credit
+## Thanks
 The approach used here was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
 posted by a user called Mytko in the datatables forum:
 https://datatables.net/forums/discussion/25045/treetable-in-datatables
