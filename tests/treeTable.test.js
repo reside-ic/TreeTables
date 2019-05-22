@@ -3,13 +3,12 @@ require('datatables.net')(window, $);
 require("../treeTable")(window, $);
 
 const fakeData = [
-    {key: 1, parent: 0, level: 0, name: "first-parent", hasChild: true},
-    {key: 2, parent: 1, level: 1, name: "first-child", hasChild: true},
-    {key: 3, parent: 2, level: 2, name: "second-child", hasChild: false},
-    {key: 4, parent: 0, level: 0, name: "no-children", hasChild: false}];
+    {key: 1, parent: 0, name: "first-parent", hasChild: true},
+    {key: 2, parent: 1, name: "first-child", hasChild: true},
+    {key: 3, parent: 2, name: "second-child", hasChild: false},
+    {key: 4, parent: 0, name: "no-children", hasChild: false}];
 
 const headers = "<thead><th></th>\n" +
-    "        <th>Path</th>\n" +
     "        <th>Key</th>\n" +
     "        <th>Parent</th>\n" +
     "        <th>HasChild</th>\n" +
@@ -79,10 +78,10 @@ test('rows with children have has-child css class', () => {
 test('rows are sorted by top level parents first', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, level: 0, name: "b", hasChild: false},
-        {key: 2, parent: 4, level: 1, name: "f", hasChild: false},
-        {key: 3, parent: 4, level: 1, name: "d", hasChild: false},
-        {key: 4, parent: 0, level: 0, name: "a", hasChild: true}];
+        {key: 1, parent: 0, name: "b", hasChild: false},
+        {key: 2, parent: 4, name: "f", hasChild: false},
+        {key: 3, parent: 4, name: "d", hasChild: false},
+        {key: 4, parent: 0, name: "a", hasChild: true}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -91,7 +90,7 @@ test('rows are sorted by top level parents first', () => {
 
     const dt = $table.DataTable();
 
-    dt.order([5, 'asc'])
+    dt.order([4, 'asc'])
         .draw();
 
     expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("a");
@@ -104,10 +103,10 @@ test('rows are sorted by top level parents first', () => {
 test('rows are sorted initially if order option is provided', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, level: 0, name: "b", hasChild: false},
-        {key: 2, parent: 4, level: 1, name: "f", hasChild: false},
-        {key: 3, parent: 4, level: 1, name: "d", hasChild: false},
-        {key: 4, parent: 0, level: 0, name: "a", hasChild: true}];
+        {key: 1, parent: 0, name: "b", hasChild: false},
+        {key: 2, parent: 4, name: "f", hasChild: false},
+        {key: 3, parent: 4, name: "d", hasChild: false},
+        {key: 4, parent: 0, name: "a", hasChild: true}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -116,7 +115,7 @@ test('rows are sorted initially if order option is provided', () => {
         data: fakeData,
         columns: [{data: "name"}],
         collapsed: false,
-        order: [[5, 'asc']]
+        order: [[4, 'asc']]
     });
 
     expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("a");
@@ -129,9 +128,9 @@ test('rows are sorted initially if order option is provided', () => {
 test('nested child rows are hidden when their parent is', () => {
 
     const fakeData = [
-        {key: 1, parent: 0, level: 0, name: "parent", hasChild: true},
-        {key: 2, parent: 1, level: 1, name: "child", hasChild: true},
-        {key: 3, parent: 2, level: 1, name: "grandchild", hasChild: false}
+        {key: 1, parent: 0, name: "parent", hasChild: true},
+        {key: 2, parent: 1, name: "child", hasChild: true},
+        {key: 3, parent: 2, name: "grandchild", hasChild: false}
     ];
 
     const $table = $(document.createElement('table'));
@@ -141,7 +140,7 @@ test('nested child rows are hidden when their parent is', () => {
         data: fakeData,
         columns: [{data: "name"}],
         collapsed: false,
-        order: [[5, 'asc']]
+        order: [[4, 'asc']]
     });
 
     const parentRow = $($table.find("tbody tr")[0]);

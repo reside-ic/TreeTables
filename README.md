@@ -64,8 +64,8 @@ TreeTable options are all DataTable options plus:
         });
 ```
 
-Please note that the TreeTable plugin adds 5 invisible columns to the table.
-So user provided columns start from index 5 and any references to columns
+Please note that the TreeTable plugin adds 4 invisible columns to the table.
+So user provided columns start from index 4 and any references to columns
 must take this into account.
 
 E.g., this table will be initially sorted by name:
@@ -83,7 +83,7 @@ E.g., this table will be initially sorted by name:
                     "data": "salary"
                 }
             ],
-            "order": [[ 5, 'asc' ]]
+            "order": [[ 4, 'asc' ]]
         });
 ```
 
@@ -93,11 +93,11 @@ The datatables API will be attached to the table element in the usual way,
 accessible by ```$('#my-table').DataTable()```
 
 Please note that as with the options, any API operation that references columns by
-index must take into account the 5 invisible columns. E.g. to re-sort the
+index must take into account the 4 invisible columns. E.g. to re-sort the
 above table by salary:
 
 ```
- $('#my-table').DataTable().order([ 6, 'asc' ])
+ $('#my-table').DataTable().order([ 5, 'asc' ])
  ```
 
 ## Credit

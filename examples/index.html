@@ -8,7 +8,6 @@
     <thead>
     <tr>
         <th></th>
-        <th>Path</th>
         <th>Key</th>
         <th>Parent</th>
         <th>HasChild</th>
@@ -26,7 +25,7 @@
 
         const fakeData = [
             {key: 1, parent: 0, level: 0, name: "CEO", salary: 1000000, hasChild: true},
-            {key: 2, parent: 1, level: 1, name: "CTO", salary: 100000, hasChild: true},
+            {key: 2, parent: 1, level: 1, name: "CTO", salary: 110000, hasChild: true},
             {key: 3, parent: 2, level: 2, name: "Front-end developer", salary: 60000, hasChild: false},
             {key: 4, parent: 2, level: 2, name: "Back-end developer", salary: 65000, hasChild: false},
             {key: 5, parent: 1, level: 1, name: "CFO", salary: 100000, hasChild: false}
@@ -43,7 +42,7 @@
                     "data": "salary"
                 }
             ],
-            "order": [[6, 'desc']]
+            "order": [[5, 'desc']]
         });
 
     })

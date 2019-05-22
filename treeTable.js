@@ -96,10 +96,6 @@
                 "width": 50
             },
             {
-                "data": "level",
-                "visible": false
-            },
-            {
                 "data": "key",
                 "visible": false
             },
@@ -116,9 +112,6 @@
         options.createdRow = function (row, data, dataIndex) {
             if (data.hasChild) {
                 $(row).addClass('has-child');
-            }
-            if (data.level > 0) {
-                $(row).addClass('level-' + data.level);
             }
         };
 
