@@ -64,6 +64,42 @@ TreeTable options are all DataTable options plus:
         });
 ```
 
+Please note that the TreeTable plugin adds 5 invisible columns to the table.
+So user provided columns start from index 5 and any references to columns
+must take this into account.
+
+E.g., this table will be initially sorted by name:
+
+
+```
+        $('#my-table').treeTable({
+            "data": myData,
+            "collapsed": true,
+            "columns": [
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "salary"
+                }
+            ],
+            "order": [[ 5, 'asc' ]]
+        });
+```
+
+
+### API
+The datatables API will be attached to the table element in the usual way,
+accessible by ```$('#my-table').DataTable()```
+
+Please note that as with the options, any API operation that references columns by
+index must take into account the 5 invisible columns. E.g. to re-sort the
+above table by salary:
+
+```
+ $('#my-table').DataTable().order([ 6, 'asc' ])
+ ```
+
 ## Credit
 The approach used here was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
 posted by a user called Mytko in the datatables forum:

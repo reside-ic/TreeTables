@@ -68,7 +68,7 @@
 
     const TreeTable = function (element, options) {
         const self = this;
-        this.displayed = new Set([]);
+        this.collapsed = new Set([]);
         this.$el = $(element);
         this.dt = null;
         const initialOrder = options.order;
@@ -93,15 +93,7 @@
                 "orderable": false,
                 "data": null,
                 "defaultContent": "<div class='expander'></div>",
-                "width": 50,
-                "createdCell": function (td, cellData, rowData) {
-                    if (rowData.level > 0) {
-                        td.className = td.className + ' level-' + rowData.level;
-                    }
-                    if (rowData.hasChild) {
-                        td.className = td.className + ' has-child';
-                    }
-                }
+                "width": 50
             },
             {
                 "data": "level",
@@ -125,11 +117,23 @@
             if (data.hasChild) {
                 $(row).addClass('has-child');
             }
+            if (data.level > 0) {
+                $(row).addClass('level-' + data.level);
+            }
         };
+
+        this.rows = [];
 
         this.dt = this.$el.on('init.dt', function () {
             if (options.collapsed) {
-                self.$el.DataTable().columns([3]).search('^(0)$', true, false).draw();
+                self.$el.DataTable().rows().eq(0).filter(function (rowIdx) {
+                    if (self.$el.DataTable().cell(rowIdx, 4).data() === true) {
+                        self.collapsed.add(rowIdx + 1);
+                    }
+                });
+            }
+            else {
+                self.$el.find("tbody tr").addClass("open");
             }
         }).DataTable(options);
 
@@ -137,46 +141,73 @@
             self.toggleChildRows($(this))
         });
 
-        this.dt.order(initialOrder);
-
+        if (initialOrder) {
+            this.dt.order(initialOrder)
+                .draw();
+        }
+        redraw(this);
     };
 
-    TreeTable.prototype.toggleChildRows = function ($cell) {
-        const tr = $cell.closest('tr');
-        const row = this.dt.row(tr);
+    TreeTable.prototype.toggleChildRows = function ($tr) {
+
+        const row = this.dt.row($tr);
         const key = row.data().key;
-        if (this.displayed.has(key)) {
-            this.displayed.delete(key);
-            tr.removeClass('open');
+
+        if (this.collapsed.has(key)) {
+            this.collapsed.delete(key);
+            $tr.addClass('open');
         } else {
-            this.displayed.add(key);
-            tr.addClass('open');
+            this.collapsed.add(key);
+            $tr.removeClass('open');
         }
+        redraw(this);
+    };
+
+    function redraw(tt) {
         let regex = "^(0";
-        this.displayed.forEach(function (value) {
+        tt.collapsed.forEach(function (value) {
             regex = regex + "|" + value;
         });
         regex = regex + ")$";
-        this.dt.columns([3]).search(regex, true, false).draw();
-    };
+        const parentRegex = new RegExp(regex);
+        tt.rows = tt.dt.rows().eq(0).filter((rowIdx) => {
+            return !tt.hasParent(rowIdx + 1, parentRegex);
+        });
 
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+
+        const ttSearch = function(settings, data, dataIndex) {
+            return tt.rows.indexOf(dataIndex) > -1
+        };
+        $.fn.dataTable.ext.search.push(ttSearch);
+        tt.dt.draw();
+    }
+
+    TreeTable.prototype.hasParent = function (key, parentRegex) {
+        const rowData = this.dt.row(key - 1).data();
+        const p = rowData['parent'];
+        if (p === 0) return false;
+        if (parentRegex.test(p.toString())) return true;
+        return this.hasParent(p, parentRegex);
+    };
 
     TreeTable.DEFAULTS = {};
 
-    TreeTable.prototype.buildCollapseObject = function (key) {
+    TreeTable.prototype.buildOrderObject = function (key, column) {
         if (!this.dt) return '';
 
         const rowData = this.dt.row(key - 1).data();
         if (typeof rowData === 'undefined') {
             return {};
         } else {
-            const parent = this.buildCollapseObject(rowData['parent']);
+            const parent = this.buildOrderObject(rowData['parent'], column);
             let a = parent;
             while (typeof a.child !== 'undefined') {
                 a = a.child;
             }
             a.child = {};
             a.child.key = rowData['key'];
+            a.child.value = rowData[column];
             return parent;
         }
     };

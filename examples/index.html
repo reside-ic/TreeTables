@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="../tree-table.css"/>
 </head>
 <body>
-<table id="test-table">
+<table id="test-table" width="100%">
     <thead>
     <tr>
         <th></th>
@@ -13,6 +13,7 @@
         <th>Parent</th>
         <th>HasChild</th>
         <th>Name</th>
+        <th>Salary</th>
     </tr>
     </thead>
 </table>
@@ -24,12 +25,11 @@
     $(document).ready(function () {
 
         const fakeData = [
-            {key: 1, parent: 0, level: 0, name: "first-parent", hasChild: true},
-            {key: 2, parent: 1, level: 1, name: "first-child", hasChild: true},
-            {key: 3, parent: 2, level: 2, name: "second-level-child", hasChild: false},
-            {key: 4, parent: 0, level: 0, name: "no children", hasChild: false}
+            {key: 1, parent: 0, level: 0, name: "CEO", salary: 1000000, hasChild: true},
+            {key: 2, parent: 1, level: 1, name: "CTO", salary: 100000, hasChild: true},
+            {key: 3, parent: 2, level: 2, name: "developer", salary: 80000, hasChild: false},
+            {key: 4, parent: 1, level: 1, name: "CFO", salary: 100000, hasChild: false}
         ];
-
 
         $('#test-table').treeTable({
             "data": fakeData,
@@ -37,8 +37,12 @@
             "columns": [
                 {
                     "data": "name"
+                },
+                {
+                    "data": "salary"
                 }
-            ]
+            ],
+            "order": [[6, 'asc']]
         });
 
     })
