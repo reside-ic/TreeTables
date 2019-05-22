@@ -103,19 +103,16 @@
             {
                 "data": "tt_parent",
                 "visible": false
-            },
-            {
-                "data": "hasChild",
-                "visible": false
             }
         ]);
 
         options.createdRow = function (row, data, dataIndex) {
-            if (data.hasChild) {
+            if (self.hasChild(data.tt_key)) {
                 $(row).addClass('has-child');
             }
         };
 
+        this.data = options.data;
         this.rows = [];
 
         this.dt = this.$el.on('init.dt', () => {
@@ -127,7 +124,7 @@
             }
         }).DataTable(options);
 
-        this.$el.find('tbody').on('click', 'tr.has-child', function() {
+        this.$el.find('tbody').on('click', 'tr.has-child', function () {
             self.toggleChildRows($(this))
         });
 
@@ -137,6 +134,10 @@
         }
 
         this.redraw();
+    };
+
+    TreeTable.prototype.hasChild = function (key) {
+        return this.data.filter((d) => d["tt_parent"] === key).length > 0;
     };
 
     TreeTable.prototype.toggleChildRows = function ($tr) {
@@ -158,7 +159,7 @@
         const dt = this.$el.DataTable();
         dt.rows().eq(0).filter((rowIdx) => {
             const row = dt.row(rowIdx).data();
-            if (row.hasChild) {
+            if (this.hasChild(row.tt_key)) {
                 this.collapsed.add(row.tt_key);
             }
         });

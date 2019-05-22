@@ -27,10 +27,10 @@ that support.
 
 ```
  const organisationData = [
-            {key: 1, parent: 0, name: "CEO", hasChild: true},
-            {key: 2, parent: 1, name: "CTO", hasChild: true},
-            {key: 3, parent: 2, name: "developer", hasChild: false},
-            {key: 4, parent: 1, name: "CFO", hasChild: false}
+            {key: 1, parent: 0, name: "CEO"},
+            {key: 2, parent: 1, name: "CTO"},
+            {key: 3, parent: 2, name: "developer"},
+            {key: 4, parent: 1, name: "CFO"}
         ];
 
         $('#my-table').treeTable({
@@ -46,7 +46,6 @@ that support.
 Data provided to the table must include the following fields:
 * key: number - a unique row identifier
 * parent: number - the key of this row's parent row
-* hasChild: bool - does this row have any children
 
 ## Options
 TreeTable options are all DataTable options plus:
