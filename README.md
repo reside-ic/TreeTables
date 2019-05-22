@@ -21,7 +21,7 @@ And the following css in your document head:
     <link rel="stylesheet" href="tree-table.css"/>
 ```
 
-### Basic Usage
+## Basic Usage
 
 ```
  const organisationData = [
@@ -46,7 +46,7 @@ Data provided to the table must include the following fields:
 * parent: number - the key of this row's parent row
 * hasChild: bool - does this row have any children
 
-### Options
+## Options
 TreeTable options are all DataTable options plus:
 * collapsed: bool - whether to start with all child rows collapsed
 
@@ -85,7 +85,7 @@ E.g., this table will be initially sorted by name:
 ```
 
 
-### API
+## API
 The datatables API will be attached to the table element in the usual way,
 accessible by ```$('#my-table').DataTable()```
 
@@ -97,7 +97,7 @@ above table by salary:
  $('#my-table').DataTable().order([ 5, 'asc' ])
  ```
 
-## Thanks
+### Thanks
 The approach used here was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
 posted by a user called Mytko in the datatables forum:
 https://datatables.net/forums/discussion/25045/treetable-in-datatables
