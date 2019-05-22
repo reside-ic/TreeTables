@@ -79,7 +79,7 @@
             col.render = function (data, type, full, meta) {
                 switch (type) {
                     case "sort":
-                        return self.buildOrderObject(full['key'], col["data"]).child;
+                        return self.buildOrderObject(meta.row, full['key'], col["data"]).child;
                     default:
                         return oldRender ? oldRender(data, type, full, meta) : data;
                 }
@@ -124,20 +124,16 @@
 
         this.rows = [];
 
-        this.dt = this.$el.on('init.dt', function () {
+        this.dt = this.$el.on('init.dt', ()  => {
             if (options.collapsed) {
-                self.$el.DataTable().rows().eq(0).filter(function (rowIdx) {
-                    if (self.$el.DataTable().cell(rowIdx, 4).data() === true) {
-                        self.collapsed.add(rowIdx + 1);
-                    }
-                });
+                this.collapseAllRows();
             }
             else {
-                self.$el.find("tbody tr").addClass("open");
+                this.$el.find("tbody tr").addClass("open");
             }
         }).DataTable(options);
 
-        this.$el.find('tbody').on('click', 'tr.has-child', function () {
+        this.$el.find('tbody').on('click', 'tr.has-child', function() {
             self.toggleChildRows($(this))
         });
 
@@ -145,7 +141,8 @@
             this.dt.order(initialOrder)
                 .draw();
         }
-        redraw(this);
+
+        this.redraw();
     };
 
     TreeTable.prototype.toggleChildRows = function ($tr) {
@@ -160,56 +157,79 @@
             this.collapsed.add(key);
             $tr.removeClass('open');
         }
-        redraw(this);
+        this.redraw();
     };
 
-    function redraw(tt) {
-        let regex = "^(0";
-        tt.collapsed.forEach(function (value) {
-            regex = regex + "|" + value;
+    TreeTable.prototype.collapseAllRows = function() {
+        const dt = this.$el.DataTable();
+        dt.rows().eq(0).filter((rowIdx) => {
+            const row = dt.row(rowIdx).data();
+            if (row.hasChild) {
+                this.collapsed.add(row.key);
+            }
         });
-        regex = regex + ")$";
-        const parentRegex = new RegExp(regex);
-        tt.rows = tt.dt.rows().eq(0).filter((rowIdx) => {
-            return !tt.hasParent(rowIdx + 1, parentRegex);
-        });
+    };
 
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+    TreeTable.prototype.redraw = function() {
+            let regex = "^(0";
+            this.collapsed.forEach(function (value) {
+                regex = regex + "|" + value;
+            });
+            regex = regex + ")$";
+            const parentRegex = new RegExp(regex);
+            this.rows = this.dt.rows().eq(0).filter((rowIdx) => {
+                return !this.hasParent(rowIdx, parentRegex);
+            });
 
-        const ttSearch = function(settings, data, dataIndex) {
-            return tt.rows.indexOf(dataIndex) > -1
-        };
-        $.fn.dataTable.ext.search.push(ttSearch);
-        tt.dt.draw();
-    }
+            $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
 
-    TreeTable.prototype.hasParent = function (key, parentRegex) {
-        const rowData = this.dt.row(key - 1).data();
+            const self = this;
+            const ttSearch = function (settings, data, dataIndex) {
+                return self.rows.indexOf(dataIndex) > -1
+            };
+
+            $.fn.dataTable.ext.search.push(ttSearch);
+            this.dt.draw();
+    };
+
+    TreeTable.prototype.hasParent = function (rowIdx, parentRegex) {
+        const rowData = this.dt.row(rowIdx).data();
         const p = rowData['parent'];
         if (p === 0) return false;
         if (parentRegex.test(p.toString())) return true;
-        return this.hasParent(p, parentRegex);
+        const parentIdx = this.getIdxForKey(p);
+        return this.hasParent(parentIdx, parentRegex);
     };
 
     TreeTable.DEFAULTS = {};
 
-    TreeTable.prototype.buildOrderObject = function (key, column) {
+    TreeTable.prototype.buildOrderObject = function (rowIdx, key, column) {
         if (!this.dt) return '';
 
-        const rowData = this.dt.row(key - 1).data();
-        if (typeof rowData === 'undefined') {
-            return {};
-        } else {
-            const parent = this.buildOrderObject(rowData['parent'], column);
-            let a = parent;
-            while (typeof a.child !== 'undefined') {
-                a = a.child;
-            }
-            a.child = {};
-            a.child.key = rowData['key'];
-            a.child.value = rowData[column];
-            return parent;
+        const rowData = this.dt.row(rowIdx).data();
+
+        const parentKey = rowData['parent'];
+        let parent = {};
+        if (parentKey > 0) {
+            const parentIdx = this.getIdxForKey(parentKey);
+            parent = this.buildOrderObject(parentIdx, parentKey, column);
         }
+        let a = parent;
+        while (typeof a.child !== 'undefined') {
+            a = a.child;
+        }
+        a.child = {};
+        a.child.key = rowData['key'];
+        a.child.value = rowData[column];
+        return parent;
+
+    };
+
+    TreeTable.prototype.getIdxForKey = function (key) {
+        return this.dt.rows().eq(0).filter((rowIdx) => {
+            const row = this.dt.row(rowIdx).data();
+            return row.key === key;
+        })[0];
     };
 
     const old = $.fn.treeTable;
