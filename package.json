@@ -1,7 +1,7 @@
 {
   "name": "tree-table",
   "version": "1.0.0",
-  "description": "",
+  "description": "jquery plugin extending jquery-datatables to support tree data",
   "main": "treeTable.js",
   "scripts": {
     "test": "jest"
@@ -10,21 +10,23 @@
     "type": "git",
     "url": "git+https://github.com/reside-ic/tree-table.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Alex Hill",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/reside-ic/tree-table/issues"
   },
   "homepage": "https://github.com/reside-ic/tree-table#readme",
-  "devDependencies": {
+  "dependencies" : {
     "datatables.net": "^1.10.19",
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {
     "datatables.net-bs4": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
-    "jest": "^24.8.0",
-    "jquery": "^3.4.1"
+    "jest": "^24.8.0"
   }
 }
