@@ -5,7 +5,7 @@
   "main": "treeTable.js",
   "scripts": {
     "compile": "gulp sass",
-    "test": "jest",
+    "test": "nyc jest",
     "posttest": "nyc report --reporter=json"
   },
   "repository": {
