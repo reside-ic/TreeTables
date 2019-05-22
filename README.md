@@ -44,7 +44,7 @@ that support.
 ```
 
 Data provided to the table must include the following fields:
-* key: number - a unique row identifier
+* key: number - a unique row identifier. Must be 1-indexed.
 * parent: number - the key of this row's parent row
 
 ## Options
@@ -64,7 +64,7 @@ TreeTable options are all DataTable options plus:
 ```
 
 Please note that the TreeTable plugin adds a left-hand column to the table.
-So *user provided columns are 1-indexed instead of 0-indexed*.
+This means that **user provided columns are 1-indexed instead of 0-indexed**.
 
 E.g., this table will be initially sorted by name:
 

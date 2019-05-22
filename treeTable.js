@@ -106,10 +106,17 @@
             }
         ]);
 
-        options.createdRow = function (row, data, dataIndex) {
+        options.createdRow = function (row, data) {
+            let cssClass = "";
             if (self.hasChild(data.tt_key)) {
-                $(row).addClass('has-child');
+               cssClass += " has-child ";
             }
+            if (data.tt_parent > 0) {
+                cssClass += " has-parent";
+            }
+
+            cssClass += " level-" + (self.level(data.tt_key) - 2);
+            $(row).addClass(cssClass);
         };
 
         this.data = options.data;
@@ -134,6 +141,14 @@
         }
 
         this.redraw();
+    };
+
+    TreeTable.prototype.level = function (key) {
+        if (key === 0) {
+            return 1
+        }
+        const parentKey = this.data.filter((d) => d.tt_key === key)[0].tt_parent;
+        return 1 + this.level(parentKey);
     };
 
     TreeTable.prototype.hasChild = function (key) {

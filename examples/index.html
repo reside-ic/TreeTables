@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../node_modules/datatables.net-dt/css/jquery.dataTables.css"/>
     <link rel="stylesheet" href="../tree-table.css"/>
+    <style>
+        table.dataTable tbody tr.level-0 {
+            background-color: #fff;
+        }
+        table.dataTable tbody tr.level-1 {
+            background-color: #eee;
+        }
+        table.dataTable tbody tr.level-2 {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
 <table id="test-table" width="100%">
@@ -38,7 +49,7 @@
                 },
                 {
                     "data": "salary",
-                    render: function(data) {
+                    render: function (data) {
                         return "£" + data;
                     }
                 }
