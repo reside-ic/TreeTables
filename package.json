@@ -16,7 +16,7 @@
     "url": "https://github.com/reside-ic/tree-table/issues"
   },
   "homepage": "https://github.com/reside-ic/tree-table#readme",
-  "dependencies" : {
+  "dependencies": {
     "datatables.net": "^1.10.19",
     "jquery": "^3.4.1"
   },
