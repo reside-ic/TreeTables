@@ -87,14 +87,15 @@
             col.type = "tt";
         });
 
-        options.columns = [
-            {
-                "class": "tt-details-control",
-                "orderable": false,
-                "data": null,
-                "defaultContent": "<div class='expander'></div>",
-                "width": 50
-            },
+        this.$el.find("thead tr").prepend("<th></th>");
+
+        options.columns = [{
+            "class": "tt-details-control",
+            "orderable": false,
+            "data": null,
+            "defaultContent": "<div class='expander'></div>",
+            "width": 50
+        }].concat(options.columns).concat([
             {
                 "data": "key",
                 "visible": false
@@ -107,7 +108,7 @@
                 "data": "hasChild",
                 "visible": false
             }
-        ].concat(options.columns);
+        ]);
 
         options.createdRow = function (row, data, dataIndex) {
             if (data.hasChild) {
@@ -117,7 +118,7 @@
 
         this.rows = [];
 
-        this.dt = this.$el.on('init.dt', ()  => {
+        this.dt = this.$el.on('init.dt', () => {
             if (options.collapsed) {
                 this.collapseAllRows();
             }
@@ -126,7 +127,7 @@
             }
         }).DataTable(options);
 
-        this.$el.find('tbody').on('click', 'tr.has-child', function() {
+        this.$el.find('tbody').on('click', 'tr.has-child', function () {
             self.toggleChildRows($(this))
         });
 
@@ -153,7 +154,7 @@
         this.redraw();
     };
 
-    TreeTable.prototype.collapseAllRows = function() {
+    TreeTable.prototype.collapseAllRows = function () {
         const dt = this.$el.DataTable();
         dt.rows().eq(0).filter((rowIdx) => {
             const row = dt.row(rowIdx).data();
@@ -163,26 +164,26 @@
         });
     };
 
-    TreeTable.prototype.redraw = function() {
-            let regex = "^(0";
-            this.collapsed.forEach(function (value) {
-                regex = regex + "|" + value;
-            });
-            regex = regex + ")$";
-            const parentRegex = new RegExp(regex);
-            this.rows = this.dt.rows().eq(0).filter((rowIdx) => {
-                return !this.hasParent(rowIdx, parentRegex);
-            });
+    TreeTable.prototype.redraw = function () {
+        let regex = "^(0";
+        this.collapsed.forEach(function (value) {
+            regex = regex + "|" + value;
+        });
+        regex = regex + ")$";
+        const parentRegex = new RegExp(regex);
+        this.rows = this.dt.rows().eq(0).filter((rowIdx) => {
+            return !this.hasParent(rowIdx, parentRegex);
+        });
 
-            $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
 
-            const self = this;
-            const ttSearch = function (settings, data, dataIndex) {
-                return self.rows.indexOf(dataIndex) > -1
-            };
+        const self = this;
+        const ttSearch = function (settings, data, dataIndex) {
+            return self.rows.indexOf(dataIndex) > -1
+        };
 
-            $.fn.dataTable.ext.search.push(ttSearch);
-            this.dt.draw();
+        $.fn.dataTable.ext.search.push(ttSearch);
+        this.dt.draw();
     };
 
     TreeTable.prototype.hasParent = function (rowIdx, parentRegex) {

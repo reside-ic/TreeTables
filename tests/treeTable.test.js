@@ -90,7 +90,7 @@ test('rows are sorted by top level parents first', () => {
 
     const dt = $table.DataTable();
 
-    dt.order([4, 'asc'])
+    dt.order([1, 'asc'])
         .draw();
 
     expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("a");
@@ -115,7 +115,7 @@ test('rows are sorted initially if order option is provided', () => {
         data: fakeData,
         columns: [{data: "name"}],
         collapsed: false,
-        order: [[4, 'asc']]
+        order: [[1, 'asc']]
     });
 
     expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("a");
@@ -140,7 +140,7 @@ test('nested child rows are hidden when their parent is', () => {
         data: fakeData,
         columns: [{data: "name"}],
         collapsed: false,
-        order: [[4, 'asc']]
+        order: [[1, 'asc']]
     });
 
     const parentRow = $($table.find("tbody tr")[0]);
