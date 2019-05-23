@@ -1,6 +1,6 @@
 # TreeTables plug-in for jQuery
 
-[![Build Status](https://travis-ci.org/reside-ic/tree-table.svg?branch=master )](https://travis-ci.org/reside-ic/tree-table?branch=master)
+[![Build Status](https://travis-ci.com/reside-ic/tree-table.svg?branch=master )](https://travis-ci.com/reside-ic/tree-table?branch=master)
 [![codecov.io](https://codecov.io/github/reside-ic/tree-table/coverage.svg?branch=master)](https://codecov.io/github/reside-ic/tree-table?branch=master)
 
 TreeTables is a jQuery plugin that enhances the functionality of the
