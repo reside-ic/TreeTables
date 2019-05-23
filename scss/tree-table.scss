@@ -1,0 +1,59 @@
+tr {
+
+  .tt-details-control {
+
+    .expander {
+      position: relative;
+      color: transparent;
+      margin: 0 10px;
+    }
+  }
+
+  &.has-child {
+    cursor: pointer;
+
+    .tt-details-control {
+
+      .expander {
+        cursor: pointer;
+
+        &::after {
+          content: '';
+          position: absolute;
+          -webkit-transform: translate(-18%, -50%) rotate(-90deg);
+          transform: translate(-18%, -50%) rotate(-90deg);
+          border-left: 5.04px solid transparent;
+          border-right: 5.04px solid transparent;
+          border-top: 7px solid #000;
+          transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &.open {
+    .tt-details-control .expander::after {
+      -webkit-transform: translate(-18%, -50%) rotate(0);
+      transform: translate(-18%, -50%) rotate(0);
+    }
+  }
+
+  &:not(.has-child) {
+    .tt-details-control .expander::after {
+      content: '-';
+      font-weight: bold;
+      color: #000;
+      border: 0;
+    }
+  }
+
+  @for $i from 1 through 5 {
+    &.level-#{$i} {
+      .tt-details-control .expander::after {
+        margin-left: #{$i * 10}px;
+      }
+    }
+  }
+
+}
