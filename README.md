@@ -31,10 +31,10 @@ that support.
 
 ```
  const organisationData = [
-            {key: 1, parent: 0, name: "CEO"},
-            {key: 2, parent: 1, name: "CTO"},
-            {key: 3, parent: 2, name: "developer"},
-            {key: 4, parent: 1, name: "CFO"}
+            {tt_key: 1, tt_parent: 0, name: "CEO"},
+            {tt_key: 2, tt_parent: 1, name: "CTO"},
+            {tt_key: 3, tt_parent: 2, name: "developer"},
+            {tt_key: 4, tt_parent: 1, name: "CFO"}
         ];
 
         $('#my-table').treeTable({
@@ -48,8 +48,8 @@ that support.
 ```
 
 Data provided to the table must include the following fields:
-* key: number - a unique row identifier. Must be 1-indexed.
-* parent: number - the key of this row's parent row
+* tt_key: number - a unique row identifier. Must be 1-indexed.
+* tt_parent: number - the key of this row's parent row
 
 ## Options
 TreeTable options are all DataTable options plus:
