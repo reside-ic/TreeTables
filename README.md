@@ -121,7 +121,7 @@ To collapse all rows:
                     .redraw();
 
 ## Examples
-See [examples/README.md]
+See [examples/README.md](examples/README.md)
 
 ### Thanks
 This plugin was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
