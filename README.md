@@ -9,6 +9,8 @@ popular [DataTables](https://github.com/DataTables/DataTables) plugin.
 DataTables does not support tree data by default, so this plugin adds
 that support.
 
+![Screenshot of plugin in use](screenshot.png)
+
 ## Installation options
 1. Download:
     First download the base DataTables scripts here: https://datatables.net/download/
@@ -24,6 +26,8 @@ that support.
     <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
     <link rel="stylesheet" type="text/css" href="tree-table.css"/>
     ```
+
+    See [examples](examples/README.md) for styling with Bootstrap
 
 2. npm: `npm install @reside-ic/tree-table`
 
@@ -90,17 +94,36 @@ E.g., this table will be initially sorted by name:
 
 
 ## API
-The datatables API will be attached to the table element in the usual way,
+The DataTables API will be attached to the table element in the usual way,
 accessible by ```$('#my-table').DataTable()```
 
 Please note that as with the options, columns are 1-indexed. E.g. to re-sort the
 above table by salary:
 
-```
- $('#my-table').DataTable().order([ 2, 'asc' ])
- ```
+     $('#my-table').DataTable()
+                   .order([ 2, 'asc' ])
+                   .draw();
+
+
+Additionally the TreeTable plugin exposes API methods for collapsing and
+ exanding rows via ``` $('#myTable').data('treeTable')```
+
+To expand all rows:
+
+    $('#myTable').data('treeTable')
+                    .expandAllRows()
+                    .redraw();
+
+To collapse all rows:
+
+    $('#myTable').data('treeTable')
+                    .collapseAllRows()
+                    .redraw();
+
+## Examples
+See [examples/README.md]
 
 ### Thanks
-The approach used here was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
+This plugin was inspired by a [jsfiddle](http://jsfiddle.net/hcke44hy/8)
 posted by a user called Mytko in the datatables forum:
 https://datatables.net/forums/discussion/25045/treetable-in-datatables

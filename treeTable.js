@@ -260,6 +260,7 @@
         });
     };
 
+
     $.fn.treeTable.Constructor = TreeTable;
 
     $.fn.treeTable.noConflict = function () {

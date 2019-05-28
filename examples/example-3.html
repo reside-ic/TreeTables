@@ -2,32 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../node_modules/datatables.net-dt/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css"/>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="../tree-table.css"/>
-    <style>
-        table.dataTable tbody tr.level-0 {
-            background-color: #fff;
-        }
-        table.dataTable tbody tr.level-1 {
-            background-color: #eee;
-        }
-        table.dataTable tbody tr.level-2 {
-            background-color: #ddd;
-        }
-    </style>
 </head>
 <body>
-<table id="test-table" width="100%">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Salary</th>
-    </tr>
-    </thead>
-</table>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col">
+        <div class="btn-group">
+            <button class="btn btn-primary" id="expand">Expand all</button>
+            <button class="btn btn-primary" id="collapse">Collapse all</button>
+        </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <table id="test-table" class="table table-striped" width="100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 <script src="../node_modules/jquery/dist/jquery.js"></script>
 <script src="../node_modules/datatables.net/js/jquery.dataTables.js"></script>
+<script src="../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
 <script src="../treeTable.js"></script>
 <script>
     $(document).ready(function () {
@@ -42,7 +47,7 @@
 
         $('#test-table').treeTable({
             "data": fakeData,
-            "collapsed": true,
+            "collapsed": false,
             "columns": [
                 {
                     "data": "name"
@@ -56,6 +61,15 @@
             ],
             "order": [[1, 'desc']]
         });
+
+
+        $('#expand').on("click", function () {
+            $('#test-table').data("treeTable").expandAllRows().redraw();
+        });
+
+        $('#collapse').on("click", function () {
+            $('#test-table').data("treeTable").collapseAllRows().redraw();
+        })
 
     })
 </script>

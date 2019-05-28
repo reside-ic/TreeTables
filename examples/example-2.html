@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../node_modules/datatables.net-dt/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="../tree-table.css"/>
+    <style>
+        table.dataTable tbody tr.level-0 {
+            background-color: #fff;
+        }
+        table.dataTable tbody tr.level-1 {
+            background-color: #eee;
+        }
+        table.dataTable tbody tr.level-2 {
+            background-color: #ddd;
+        }
+        table.dataTable tbody tr:not(.has-child) .expander:after {
+            content: "x";
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+<table id="test-table" width="100%">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Salary</th>
+    </tr>
+    </thead>
+</table>
+</body>
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/datatables.net/js/jquery.dataTables.js"></script>
+<script src="../treeTable.js"></script>
+<script>
+    $(document).ready(function () {
+
+        const fakeData = [
+            {"tt_key": 1, "tt_parent": 0, name: "CEO", salary: 1000000},
+            {"tt_key": 2, "tt_parent": 1, name: "CTO", salary: 110000},
+            {"tt_key": 3, "tt_parent": 2, name: "Front-end developer", salary: 60000},
+            {"tt_key": 4, "tt_parent": 2, name: "Back-end developer", salary: 65000},
+            {"tt_key": 5, "tt_parent": 1, name: "CFO", salary: 100000}
+        ];
+
+        $('#test-table').treeTable({
+            "data": fakeData,
+            "collapsed": false,
+            "columns": [
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "salary",
+                    render: function (data) {
+                        return "£" + data;
+                    }
+                }
+            ],
+            "order": [[1, 'desc']]
+        });
+
+    })
+</script>
+</html>

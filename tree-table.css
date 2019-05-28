@@ -1,7 +1,9 @@
-tr .tt-details-control .expander {
-  position: relative;
-  color: transparent;
-  margin: 0 10px; }
+tr .tt-details-control {
+  vertical-align: middle; }
+  tr .tt-details-control .expander {
+    position: relative;
+    color: transparent;
+    margin: 0 10px; }
 
 tr.has-child {
   cursor: pointer; }
