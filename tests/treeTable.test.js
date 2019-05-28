@@ -148,3 +148,56 @@ test('nested child rows are hidden when their parent is', () => {
     expect($table.find("tbody tr").length).toBe(1)
 });
 
+test('can collapse all rows', () => {
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "parent"},
+        {"tt_key": 2, "tt_parent": 1, name: "child"},
+        {"tt_key": 3, "tt_parent": 2, name: "grandchild"}
+    ];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [{data: "name"}],
+        collapsed: false,
+        order: [[1, 'asc']]
+    });
+
+    expect($table.find("tbody tr").length).toBe(3);
+
+    $table.data('treeTable')
+        .collapseAllRows()
+        .redraw();
+
+    expect($table.find("tbody tr").length).toBe(1)
+});
+
+test('can expand all rows', () => {
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "parent"},
+        {"tt_key": 2, "tt_parent": 1, name: "child"},
+        {"tt_key": 3, "tt_parent": 2, name: "grandchild"}
+    ];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [{data: "name"}],
+        collapsed: true,
+        order: [[1, 'asc']]
+    });
+
+    expect($table.find("tbody tr").length).toBe(1);
+
+    $table.data('treeTable')
+        .expandAllRows()
+        .redraw();
+
+    expect($table.find("tbody tr").length).toBe(3)
+});
