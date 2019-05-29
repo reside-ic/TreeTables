@@ -1,5 +1,5 @@
 tr .tt-details-control {
-  vertical-align: middle; }
+  vertical-align: middle !important; }
   tr .tt-details-control .expander {
     position: relative;
     color: transparent;

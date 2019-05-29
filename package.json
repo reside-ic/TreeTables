@@ -1,6 +1,6 @@
 {
   "name": "@reside-ic/tree-table",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "jquery plugin extending jquery-datatables to support tree data",
   "main": "treeTable.js",
   "scripts": {
