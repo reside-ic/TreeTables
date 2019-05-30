@@ -263,7 +263,7 @@ test('can expand all rows', () => {
     expect($table.find("tbody tr.open").length).toBe(1);
 });
 
-test("custom cell render functions are passed through and rows can stil be re-sorted", () => {
+test("custom cell render functions are executed and don't affect row sorting", () => {
 
     const headers = "<thead><th>Custom col</th><th>Name</th></thead>";
 
