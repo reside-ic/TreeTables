@@ -1,4 +1,4 @@
-# TreeTables plug-in for jQuery
+# TreeTables plug-in for jQuery <img src="logo.svg" height="85">
 
 [![Build Status](https://travis-ci.com/reside-ic/tree-table.svg?branch=master )](https://travis-ci.com/reside-ic/tree-table?branch=master)
 [![codecov.io](https://codecov.io/github/reside-ic/tree-table/coverage.svg?branch=master)](https://codecov.io/github/reside-ic/tree-table?branch=master)
