@@ -84,7 +84,6 @@
     }
 
     function buildOrderObject (self, rowIdx, key, column) {
-        if (!self.dt) return '';
 
         const rowData = self.dt.row(rowIdx).data();
 
@@ -176,7 +175,7 @@
                 this.collapseAllRows();
             }
             else {
-                this.$el.find("tbody tr").addClass("open");
+                this.$el.find("tbody tr.has-child").addClass("open");
             }
         }).DataTable(options);
 
@@ -216,11 +215,13 @@
                 this.collapsed.add(row.tt_key);
             }
         });
+        this.$el.find("tbody tr.has-child").removeClass("open");
         return this
     };
 
     TreeTable.prototype.expandAllRows = function () {
         this.collapsed = new Set([]);
+        this.$el.find("tbody tr.has-child").addClass("open");
         return this
     };
 

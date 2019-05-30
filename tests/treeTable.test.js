@@ -100,7 +100,8 @@ test('rows are sorted (asc) initially if order option is provided', () => {
         {"tt_key": 1, "tt_parent": 0, name: "b"},
         {"tt_key": 2, "tt_parent": 4, name: "f"},
         {"tt_key": 3, "tt_parent": 4, name: "d"},
-        {"tt_key": 4, "tt_parent": 0, name: "a"}];
+        {"tt_key": 4, "tt_parent": 0, name: "a"},
+        {"tt_key": 5, "tt_parent": 0, name: "a"}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -115,7 +116,8 @@ test('rows are sorted (asc) initially if order option is provided', () => {
     expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("a");
     expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("d");
     expect($($table.find("tbody tr")[2]).find("td")[1].textContent).toBe("f");
-    expect($($table.find("tbody tr")[3]).find("td")[1].textContent).toBe("b");
+    expect($($table.find("tbody tr")[3]).find("td")[1].textContent).toBe("a");
+    expect($($table.find("tbody tr")[4]).find("td")[1].textContent).toBe("b");
 
 });
 
@@ -125,7 +127,8 @@ test('rows are sorted (desc) initially if order option is provided', () => {
         {"tt_key": 1, "tt_parent": 0, name: "b"},
         {"tt_key": 2, "tt_parent": 4, name: "f"},
         {"tt_key": 3, "tt_parent": 4, name: "d"},
-        {"tt_key": 4, "tt_parent": 0, name: "a"}];
+        {"tt_key": 4, "tt_parent": 0, name: "a"},
+        {"tt_key": 5, "tt_parent": 0, name: "a"}];
 
     const $table = $(document.createElement('table'));
     $table.append($(headers));
@@ -141,6 +144,7 @@ test('rows are sorted (desc) initially if order option is provided', () => {
     expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("a");
     expect($($table.find("tbody tr")[2]).find("td")[1].textContent).toBe("f");
     expect($($table.find("tbody tr")[3]).find("td")[1].textContent).toBe("d");
+    expect($($table.find("tbody tr")[4]).find("td")[1].textContent).toBe("a");
 
 });
 
@@ -220,12 +224,14 @@ test('can collapse all rows', () => {
     });
 
     expect($table.find("tbody tr").length).toBe(3);
+    expect($table.find("tbody tr.open").length).toBe(1);
 
     $table.data('treeTable')
         .collapseAllRows()
         .redraw();
 
-    expect($table.find("tbody tr").length).toBe(1)
+    expect($table.find("tbody tr").length).toBe(1);
+    expect($table.find("tbody tr.open").length).toBe(0);
 });
 
 test('can expand all rows', () => {
@@ -247,10 +253,51 @@ test('can expand all rows', () => {
     });
 
     expect($table.find("tbody tr").length).toBe(1);
+    expect($table.find("tbody tr.open").length).toBe(0);
 
     $table.data('treeTable')
         .expandAllRows()
         .redraw();
 
-    expect($table.find("tbody tr").length).toBe(3)
+    expect($table.find("tbody tr").length).toBe(3);
+    expect($table.find("tbody tr.open").length).toBe(1);
+});
+
+test("custom cell render functions are passed through and rows can stil be re-sorted", () => {
+
+    const headers = "<thead><th>Custom col</th><th>Name</th></thead>";
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "b"},
+        {"tt_key": 2, "tt_parent": 4, name: "f"},
+        {"tt_key": 3, "tt_parent": 4, name: "d"},
+        {"tt_key": 4, "tt_parent": 0, name: "a"}];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [
+            {data: "name", render: () => "TEST"},
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+    $table.DataTable()
+        .order([1, "asc"])
+        .draw();
+
+    expect($($table.find("tbody tr")[0]).find("td")[2].textContent).toBe("a");
+    expect($($table.find("tbody tr")[1]).find("td")[2].textContent).toBe("d");
+    expect($($table.find("tbody tr")[2]).find("td")[2].textContent).toBe("f");
+    expect($($table.find("tbody tr")[3]).find("td")[2].textContent).toBe("b");
+
+    expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("TEST");
+    expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("TEST");
+    expect($($table.find("tbody tr")[2]).find("td")[1].textContent).toBe("TEST");
+    expect($($table.find("tbody tr")[3]).find("td")[1].textContent).toBe("TEST");
+
 });
