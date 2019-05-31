@@ -125,11 +125,10 @@
         options.columns.map((col) => {
             const oldRender = col.render;
             col.render = function (data, type, full, meta) {
-                switch (type) {
-                    case "sort":
-                        return buildOrderObject(self, meta.row, full['key'], col["data"]).child;
-                    default:
-                        return oldRender ? oldRender(data, type, full, meta) : data;
+                if (type === "sort") {
+                    return buildOrderObject(self, meta.row, full['key'], col["data"]).child;
+                } else {
+                    return oldRender ? oldRender(data, type, full, meta) : data;
                 }
             };
             col.type = "tt";
@@ -170,23 +169,22 @@
         this.data = options.data;
         this.rows = [];
 
-        this.dt = this.$el.on('init.dt', () => {
-            if (options.collapsed) {
-                this.collapseAllRows();
-            }
-            else {
-                this.$el.find("tbody tr.has-child").addClass("open");
-            }
-        }).DataTable(options);
+        this.dt = this.$el.DataTable(options);
+
+        if (initialOrder) {
+            this.dt.order(initialOrder);
+        }
+
+        if (options.collapsed) {
+            this.collapseAllRows();
+        }
+        else {
+            this.expandAllRows();
+        }
 
         this.$el.find('tbody').on('click', 'tr.has-child', function () {
             self.toggleChildRows($(this))
         });
-
-        if (initialOrder) {
-            this.dt.order(initialOrder)
-                .draw();
-        }
 
         this.redraw();
     };
@@ -216,12 +214,17 @@
             }
         });
         this.$el.find("tbody tr.has-child").removeClass("open");
+        this.$el.one('draw.dt', () => {
+            this.$el.find("tbody tr.has-child").removeClass("open");
+        });
         return this
     };
 
     TreeTable.prototype.expandAllRows = function () {
         this.collapsed = new Set([]);
-        this.$el.find("tbody tr.has-child").addClass("open");
+        this.$el.one('draw.dt', () => {
+            this.$el.find("tbody tr.has-child").addClass("open");
+        });
         return this
     };
 

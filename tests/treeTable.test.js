@@ -205,7 +205,7 @@ test('nested child rows are hidden when their parent is', () => {
     expect($table.find("tbody tr").length).toBe(1)
 });
 
-test('can collapse all rows', () => {
+test('can collapse all rows', async () => {
 
     const fakeData = [
         {"tt_key": 1, "tt_parent": 0, name: "parent"},
@@ -224,7 +224,7 @@ test('can collapse all rows', () => {
     });
 
     expect($table.find("tbody tr").length).toBe(3);
-    expect($table.find("tbody tr.open").length).toBe(1);
+    expect($table.find("tbody tr.open").length).toBe(2);
 
     $table.data('treeTable')
         .collapseAllRows()
@@ -232,6 +232,48 @@ test('can collapse all rows', () => {
 
     expect($table.find("tbody tr").length).toBe(1);
     expect($table.find("tbody tr.open").length).toBe(0);
+});
+
+test('can collapse all rows and then toggle one', () => {
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "parent"},
+        {"tt_key": 2, "tt_parent": 1, name: "child"},
+        {"tt_key": 3, "tt_parent": 2, name: "grandchild"}
+    ];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [{data: "name"}],
+        collapsed: false,
+        order: [[1, 'asc']]
+    });
+
+    expect($table.find("tbody tr").length).toBe(3);
+    expect($table.find("tbody tr.open").length).toBe(2);
+
+    $table.data('treeTable')
+        .collapseAllRows()
+        .redraw();
+
+    expect($table.find("tbody tr").length).toBe(1);
+    expect($table.find("tbody tr.open").length).toBe(0);
+
+    const parentRow = $($table.find("tbody tr")[0]);
+    expect(parentRow.find("td")[1].textContent).toBe("parent");
+
+    parentRow.trigger("click");
+    expect($table.find("tbody tr").length).toBe(2);
+
+    // parent row is now open
+    expect(parentRow.hasClass("open")).toBe(true);
+
+    // child row is not open
+    expect($($table.find("tbody tr")[1]).hasClass("open")).toBe(false);
+
 });
 
 test('can expand all rows', () => {
@@ -260,7 +302,45 @@ test('can expand all rows', () => {
         .redraw();
 
     expect($table.find("tbody tr").length).toBe(3);
-    expect($table.find("tbody tr.open").length).toBe(1);
+    expect($table.find("tbody tr.open").length).toBe(2);
+});
+
+test('can expand all rows and then toggle one', () => {
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "parent"},
+        {"tt_key": 2, "tt_parent": 1, name: "child"},
+        {"tt_key": 3, "tt_parent": 2, name: "grandchild"}
+    ];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [{data: "name"}],
+        collapsed: true,
+        order: [[1, 'asc']]
+    });
+
+    $table.data('treeTable')
+        .expandAllRows()
+        .redraw();
+
+    expect($table.find("tbody tr").length).toBe(3);
+    expect($table.find("tbody tr.open").length).toBe(2);
+
+    const childRow = $($table.find("tbody tr")[1]);
+    childRow.trigger("click");
+
+    expect($table.find("tbody tr").length).toBe(2);
+
+    // parent row is still open
+    expect($($table.find("tbody tr")[0]).hasClass("open")).toBe(true);
+
+    // child row is not open
+    expect(childRow.hasClass("open")).toBe(false);
+
 });
 
 test("custom cell render functions are executed and don't affect row sorting", () => {
