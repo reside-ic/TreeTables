@@ -214,9 +214,6 @@
             }
         });
         this.$el.find("tbody tr.has-child").removeClass("open");
-        this.$el.one('draw.dt', () => {
-            this.$el.find("tbody tr.has-child").removeClass("open");
-        });
         return this
     };
 
