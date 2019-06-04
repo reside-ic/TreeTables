@@ -103,8 +103,16 @@
         return parent;
     }
 
+    function buildSearchObject (self, key, col, data) {
+
+        const children = self.data.filter((d) => d["tt_parent"] === key);
+
+        return data.toString() + children.map((c) => {
+            return buildSearchObject(self, c.tt_key, col, c[col])
+        });
+    }
+
     if (!$.fn.dataTable) throw new Error('treeTable requires datatables.net');
-    const DataTable = $.fn.dataTable;
 
     $.fn.dataTableExt.oSort['tt-asc'] = function (a, b) {
         return compareObjectAsc(a, b);
@@ -125,10 +133,13 @@
         options.columns.map((col) => {
             const oldRender = col.render;
             col.render = function (data, type, full, meta) {
-                if (type === "sort") {
-                    return buildOrderObject(self, meta.row, full['key'], col["data"]).child;
-                } else {
-                    return oldRender ? oldRender(data, type, full, meta) : data;
+                switch(type){
+                    case "sort":
+                        return buildOrderObject(self, meta.row, full['tt_key'], col["data"]).child;
+                    case "filter":
+                        return buildSearchObject(self, full['tt_key'], col["data"], data);
+                    default:
+                        return oldRender ? oldRender(data, type, full, meta) : data;
                 }
             };
             col.type = "tt";
