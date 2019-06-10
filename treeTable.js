@@ -193,8 +193,8 @@
             this.expandAllRows();
         }
 
-        this.$el.find('tbody').on('click', 'tr.has-child', function () {
-            self.toggleChildRows($(this))
+        this.$el.find('tbody').on('click', 'tr.has-child td.tt-details-control', function () {
+            self.toggleChildRows($(this).parent("tr"))
         });
 
         this.redraw();
