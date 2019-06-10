@@ -107,7 +107,7 @@
 
         const children = self.data.filter((d) => d["tt_parent"] === key);
 
-        return data.toString() + children.map((c) => {
+        return (data ? data.toString() : "") + children.map((c) => {
             return buildSearchObject(self, c.tt_key, col, c[col])
         });
     }

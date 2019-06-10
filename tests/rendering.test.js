@@ -40,3 +40,26 @@ test("custom cell render functions are executed and don't affect row sorting", (
     expect($($table.find("tbody tr")[3]).find("td")[1].textContent).toBe("TEST");
 
 });
+
+const headers = "<thead><th>Name</th></thead>";
+
+test("can render with null data", () => {
+
+    const fakeData = [
+        {"tt_key": 1, "tt_parent": 0, name: "b"},
+        {"tt_key": 2, "tt_parent": 0, name: null}
+    ];
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+});
