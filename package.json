@@ -1,7 +1,17 @@
 {
   "name": "treetables",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "jquery plugin extending jquery-datatables to support tree data",
+  "keywords": [
+    "DataTables",
+    "DataTable",
+    "table",
+    "grid",
+    "jquery-plugin",
+    "treetable",
+    "tree",
+    "TreeTables"
+  ],
   "main": "treeTable.js",
   "scripts": {
     "compile": "gulp sass",
