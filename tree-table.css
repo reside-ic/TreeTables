@@ -5,7 +5,7 @@ tr .tt-details-control {
     color: transparent;
     margin: 0 10px; }
 
-tr.has-child {
+tr.has-child .tt-details-control {
   cursor: pointer; }
   tr.has-child .tt-details-control .expander {
     cursor: pointer; }

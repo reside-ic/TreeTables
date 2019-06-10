@@ -34,10 +34,10 @@ test('starting collapsed can toggle child rows when row is clicked', () => {
 
     expect($table.find("tbody tr").length).toBe(2);
 
-    $table.find("tbody tr").trigger('click');
+    $table.find("tbody td.tt-details-control").trigger('click');
     expect($table.find("tbody tr").length).toBe(3);
 
-    $table.find("tbody tr").trigger('click');
+    $table.find("tbody td.tt-details-control").trigger('click');
     expect($table.find("tbody tr").length).toBe(2);
 });
 
@@ -49,10 +49,10 @@ test('starting with all rows open can toggle child rows when row is clicked', ()
 
     expect($table.find("tbody tr").length).toBe(4);
 
-    $table.find("tbody tr").trigger('click');
+    $table.find("tbody td.tt-details-control").trigger('click');
     expect($table.find("tbody tr").length).toBe(2);
 
-    $table.find("tbody tr").trigger('click');
+    $table.find("tbody td.tt-details-control").trigger('click');
     expect($table.find("tbody tr").length).toBe(4);
 });
 
@@ -92,7 +92,7 @@ test('nested child rows are hidden when their parent is', () => {
     expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("child");
     expect($($table.find("tbody tr")[2]).find("td")[1].textContent).toBe("grandchild");
 
-    parentRow.trigger("click");
+    parentRow.find("td.tt-details-control").trigger("click");
     expect($table.find("tbody tr").length).toBe(1)
 });
 
@@ -156,7 +156,7 @@ test('can collapse all rows and then toggle one', () => {
     const parentRow = $($table.find("tbody tr")[0]);
     expect(parentRow.find("td")[1].textContent).toBe("parent");
 
-    parentRow.trigger("click");
+    parentRow.find("td.tt-details-control").trigger("click");
     expect($table.find("tbody tr").length).toBe(2);
 
     // parent row is now open
@@ -189,7 +189,7 @@ test('can toggle one row then collapse all', () => {
     expect($table.find("tbody tr.open").length).toBe(2);
 
     const childRow = $($table.find("tbody tr")[1]);
-    childRow.trigger("click");
+    childRow.find("td.tt-details-control").trigger("click");
 
     expect($table.find("tbody tr").length).toBe(2);
     expect($table.find("tbody tr.open").length).toBe(1);
@@ -257,7 +257,7 @@ test('can expand all rows and then toggle one', () => {
     expect($table.find("tbody tr.open").length).toBe(2);
 
     const childRow = $($table.find("tbody tr")[1]);
-    childRow.trigger("click");
+    childRow.find("td.tt-details-control").trigger("click");
 
     expect($table.find("tbody tr").length).toBe(2);
 
@@ -291,7 +291,7 @@ test('can toggle one row then expand all', () => {
     expect($table.find("tbody tr.open").length).toBe(2);
 
     const childRow = $($table.find("tbody tr")[1]);
-    childRow.trigger("click");
+    childRow.find("td.tt-details-control").trigger("click");
 
     expect($table.find("tbody tr").length).toBe(2);
     expect($table.find("tbody tr.open").length).toBe(1);

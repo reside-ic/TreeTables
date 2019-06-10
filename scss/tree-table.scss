@@ -12,9 +12,10 @@ tr {
   }
 
   &.has-child {
-    cursor: pointer;
 
     .tt-details-control {
+
+      cursor: pointer;
 
       .expander {
         cursor: pointer;
