@@ -29,7 +29,7 @@ that support.
 
     See [examples](examples/README.md) for styling with Bootstrap
 
-2. npm: `npm install @reside-ic/tree-table`
+2. npm: `npm install treetables`
 
 ## Basic Usage
 
