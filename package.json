@@ -1,6 +1,6 @@
 {
   "name": "treetables",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "jquery plugin extending jquery-datatables to support tree data",
   "main": "treeTable.js",
   "scripts": {
