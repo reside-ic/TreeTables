@@ -269,6 +269,40 @@ test('can expand all rows and then toggle one', () => {
 
 });
 
+test('can expand lots of rows', () => {
+
+    let i = 1;
+    const fakeData = [];
+    while (i < 300) {
+        fakeData.push(
+            {"tt_key": i, "tt_parent": 0, name: "parent" + i},
+            {"tt_key": i + 1, "tt_parent": i, name: "child" + i},
+            {"tt_key": i + 2, "tt_parent": i + 1, name: "grandchild" + i}
+        );
+        i = i + 3
+    }
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        data: fakeData,
+        columns: [{data: "name"}],
+        collapsed: true,
+        order: [[1, 'asc']],
+        pageLength: 50
+    });
+
+    $table.data('treeTable')
+        .expandAllRows()
+        .redraw();
+
+    expect($table.find("tbody tr").length).toBe(50);
+    done();
+
+});
+
+
 test('can toggle one row then expand all', () => {
 
     const fakeData = [

@@ -59,7 +59,7 @@
         if (key === 0) {
             return 1
         }
-        const parentKey = self.data.filter((d) => d.tt_key === key)[0].tt_parent;
+        const parentKey = self.data.find((d) => d.tt_key === key).tt_parent;
         return 1 + level(self, parentKey);
     }
 
@@ -237,6 +237,14 @@
     };
 
     TreeTable.prototype.redraw = function () {
+
+        if (this.collapsed.size === 0)
+        {
+            $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+            this.dt.draw();
+            return
+        }
+
         let regex = "^(0";
         this.collapsed.forEach(function (value) {
             regex = regex + "|" + value;
