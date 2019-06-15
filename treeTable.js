@@ -67,8 +67,9 @@
         return self.data.filter((d) => d["tt_parent"] === key).length > 0;
     }
 
-    function hasParent(self, rowIdx, parentRegex) {
-        const rowData = self.dt.row(rowIdx).data();
+    function hasParent(self, key, parentRegex) {
+        key = `#${key}`;
+        const rowData = self.dt.row(key).data();
         const p = rowData['tt_parent'];
         if (p === 0) return false;
         if (parentRegex.test(p.toString())) return true;
@@ -77,15 +78,14 @@
 
     function buildOrderObject (self, key, column) {
 
-       // console.log(key);
+        key = `#${key}`;
         const rowData = self.dt.row(key).data();
 
         const parentKey = rowData['tt_parent'];
-        console.log(rowData)
         let parent = {};
-        // if (parentKey > 0) {
-        //     parent = buildOrderObject(self, parentKey, column);
-        // }
+        if (parentKey > 0) {
+            parent = buildOrderObject(self, parentKey, column);
+        }
         let a = parent;
         while (typeof a.child !== 'undefined') {
             a = a.child;
@@ -213,10 +213,10 @@
 
     TreeTable.prototype.collapseAllRows = function () {
         const dt = this.$el.DataTable();
-        dt.rows().eq(0).filter((rowIdx) => {
-            const row = dt.row(rowIdx).data();
-            if (hasChild(this, row.tt_key)) {
-                this.collapsed.add(row.tt_key);
+
+        dt.rows((idx, data) => {
+            if (hasChild(this, data.tt_key)) {
+                this.collapsed.add(data.tt_key);
             }
         });
         this.$el.find("tbody tr.has-child").removeClass("open");
@@ -245,12 +245,11 @@
         });
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
-        console.time();
-        this.rows = this.dt.rows().eq(0).filter((rowIdx) => {
-            return !hasParent(this, rowIdx, parentRegex);
+
+        this.rows = this.dt.rows().eq(0).filter((i) => {
+            const data = this.dt.row(i).data();
+            return !hasParent(this, data["tt_key"], parentRegex);
         });
-        console.timeEnd();
-        console.time();
 
         $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
 
@@ -261,7 +260,6 @@
 
         $.fn.dataTable.ext.search.push(ttSearch);
         this.dt.draw();
-        console.timeEnd();
     };
 
     TreeTable.DEFAULTS = {};

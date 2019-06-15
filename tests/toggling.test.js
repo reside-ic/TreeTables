@@ -269,7 +269,7 @@ test('can expand all rows and then toggle one', () => {
 
 });
 
-test('can expand lots of rows', () => {
+test('can expand or collapse lots of rows in less than half a second', () => {
 
     let i = 1;
     const fakeData = [];
@@ -285,6 +285,8 @@ test('can expand lots of rows', () => {
     const $table = $(document.createElement('table'));
     $table.append($(headers));
 
+    const start = window.performance.now();
+
     $table.treeTable({
         data: fakeData,
         columns: [{data: "name"}],
@@ -293,13 +295,27 @@ test('can expand lots of rows', () => {
         pageLength: 50
     });
 
+    let rendered = window.performance.now();
+
+    expect(rendered - start).toBeLessThan(500);
+
     $table.data('treeTable')
         .expandAllRows()
         .redraw();
 
-    expect($table.find("tbody tr").length).toBe(50);
-    done();
+    const expanded = window.performance.now();
 
+    expect($table.find("tbody tr").length).toBe(50);
+    expect(expanded - rendered).toBeLessThan(500);
+
+    $table.data('treeTable')
+        .collapseAllRows()
+        .redraw();
+
+    const collapsed = window.performance.now();
+
+    expect($table.find("tbody tr").length).toBe(50);
+    expect(collapsed - expanded).toBeLessThan(500);
 });
 
 
