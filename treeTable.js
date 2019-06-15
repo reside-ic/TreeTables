@@ -67,32 +67,25 @@
         return self.data.filter((d) => d["tt_parent"] === key).length > 0;
     }
 
-    function getIdxForKey(self, key) {
-        return self.dt.rows().eq(0).filter((rowIdx) => {
-            const row = self.dt.row(rowIdx).data();
-            return row.tt_key === key;
-        })[0];
-    }
-
     function hasParent(self, rowIdx, parentRegex) {
         const rowData = self.dt.row(rowIdx).data();
         const p = rowData['tt_parent'];
         if (p === 0) return false;
         if (parentRegex.test(p.toString())) return true;
-        const parentIdx = getIdxForKey(self, p);
-        return hasParent(self, parentIdx, parentRegex);
+        return hasParent(self, p, parentRegex);
     }
 
-    function buildOrderObject (self, rowIdx, key, column) {
+    function buildOrderObject (self, key, column) {
 
-        const rowData = self.dt.row(rowIdx).data();
+       // console.log(key);
+        const rowData = self.dt.row(key).data();
 
         const parentKey = rowData['tt_parent'];
+        console.log(rowData)
         let parent = {};
-        if (parentKey > 0) {
-            const parentIdx = getIdxForKey(self, parentKey);
-            parent = buildOrderObject(self, parentIdx, parentKey, column);
-        }
+        // if (parentKey > 0) {
+        //     parent = buildOrderObject(self, parentKey, column);
+        // }
         let a = parent;
         while (typeof a.child !== 'undefined') {
             a = a.child;
@@ -135,7 +128,7 @@
             col.render = function (data, type, full, meta) {
                 switch(type){
                     case "sort":
-                        return buildOrderObject(self, meta.row, full['tt_key'], col["data"]).child;
+                        return buildOrderObject(self, full['tt_key'], col["data"]).child;
                     case "filter":
                         return buildSearchObject(self, full['tt_key'], col["data"], data);
                     default:
@@ -144,6 +137,8 @@
             };
             col.type = "tt";
         });
+
+        options.rowId = "tt_key";
 
         this.$el.find("thead tr").prepend("<th></th>");
 
@@ -244,16 +239,18 @@
             this.dt.draw();
             return
         }
-
         let regex = "^(0";
         this.collapsed.forEach(function (value) {
             regex = regex + "|" + value;
         });
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
+        console.time();
         this.rows = this.dt.rows().eq(0).filter((rowIdx) => {
             return !hasParent(this, rowIdx, parentRegex);
         });
+        console.timeEnd();
+        console.time();
 
         $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
 
@@ -264,6 +261,7 @@
 
         $.fn.dataTable.ext.search.push(ttSearch);
         this.dt.draw();
+        console.timeEnd();
     };
 
     TreeTable.DEFAULTS = {};
