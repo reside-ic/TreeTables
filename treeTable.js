@@ -173,7 +173,7 @@
         };
 
         this.data = options.data;
-        this.rows = [];
+        this.displayedRows = [];
 
         this.dt = this.$el.DataTable(options);
 
@@ -236,6 +236,7 @@
         if (this.collapsed.size === 0)
         {
             $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+            this.displayedRows = this.dt.rows().eq(0);
             this.dt.draw();
             return
         }
@@ -245,9 +246,8 @@
         });
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
-
-        this.rows = this.dt.rows().eq(0).filter((i) => {
-            const data = this.dt.row(i).data();
+        this.displayedRows = this.dt.rows().eq(0).filter((rowIdx) => {
+            const data = this.dt.row(rowIdx).data();
             return !hasParent(this, data["tt_key"], parentRegex);
         });
 
@@ -255,7 +255,7 @@
 
         const self = this;
         const ttSearch = function (settings, data, dataIndex) {
-            return self.rows.indexOf(dataIndex) > -1
+            return self.displayedRows.indexOf(dataIndex) > -1
         };
 
         $.fn.dataTable.ext.search.push(ttSearch);
