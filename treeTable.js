@@ -246,11 +246,11 @@
         });
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
-        this.displayedRows = this.dt.rows().eq(0).filter((rowIdx) => {
-            const data = this.dt.row(rowIdx).data();
-            return !hasParent(this, data["tt_key"], parentRegex);
-        });
 
+        this.displayedRows = this.dt.rows((idx, data) => {
+            return !hasParent(this, data["tt_key"], parentRegex);
+        }).eq(0);
+        
         $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
 
         const self = this;
