@@ -59,28 +59,22 @@
         if (key === 0) {
             return 1
         }
-        const parentKey = self.data.find((d) => d.tt_key === key).tt_parent;
+
+        const parentKey = self.dataDict[key].tt_parent;
         return 1 + level(self, parentKey);
     }
 
-    function hasChild (self, key) {
-        return self.data.filter((d) => d["tt_parent"] === key).length > 0;
-    }
-
     function hasParent(self, key, parentRegex) {
-        key = `#${key}`;
-        const rowData = self.dt.row(key).data();
+        const rowData = self.dataDict[key];
         const p = rowData['tt_parent'];
         if (p === 0) return false;
         if (parentRegex.test(p.toString())) return true;
         return hasParent(self, p, parentRegex);
     }
 
-    function buildOrderObject (self, key, column) {
+    function buildOrderObject(self, key, column) {
 
-        key = `#${key}`;
-        const rowData = self.dt.row(key).data();
-
+        const rowData = self.dataDict[key];
         const parentKey = rowData['tt_parent'];
         let parent = {};
         if (parentKey > 0) {
@@ -98,8 +92,7 @@
 
     function buildSearchObject (self, key, col, data) {
 
-        const children = self.data.filter((d) => d["tt_parent"] === key);
-
+        const children = self.dataDict[key].children;
         return (data ? data.toString() : "") + children.map((c) => {
             return buildSearchObject(self, c.tt_key, col, c[col])
         });
@@ -115,9 +108,23 @@
         return compareObjectDesc(a, b);
     };
 
+    function createDataDict(data) {
+       return data.reduce(function(map, obj) {
+            obj.children = data.filter((d) => d["tt_parent"] === obj.tt_key);
+            obj.hasChild = obj.children.length > 0;
+            map[obj.tt_key] = obj;
+            return map;
+        }, {});
+    }
+
     const TreeTable = function (element, options) {
         const self = this;
         this.collapsed = new Set([]);
+
+        this.data = options.data;
+        this.dataDict = createDataDict(options.data);
+        this.displayedRows = [];
+
         this.$el = $(element);
         this.dt = null;
         const initialOrder = options.order;
@@ -128,7 +135,7 @@
             col.render = function (data, type, full, meta) {
                 switch(type){
                     case "sort":
-                        return buildOrderObject(self, full['tt_key'], col["data"]).child;
+                        return buildOrderObject(self, full["tt_key"], col["data"]).child;
                     case "filter":
                         return buildSearchObject(self, full['tt_key'], col["data"], data);
                     default:
@@ -161,7 +168,7 @@
 
         options.createdRow = function (row, data) {
             let cssClass = "";
-            if (hasChild(self, data.tt_key)) {
+            if (self.dataDict[data.tt_key].hasChild) {
                cssClass += " has-child ";
             }
             if (data.tt_parent > 0) {
@@ -171,9 +178,6 @@
             cssClass += " level-" + (level(self, data.tt_key) - 2);
             $(row).addClass(cssClass);
         };
-
-        this.data = options.data;
-        this.displayedRows = [];
 
         this.dt = this.$el.DataTable(options);
 
@@ -212,13 +216,13 @@
     };
 
     TreeTable.prototype.collapseAllRows = function () {
-        const dt = this.$el.DataTable();
 
-        dt.rows((idx, data) => {
-            if (hasChild(this, data.tt_key)) {
-                this.collapsed.add(data.tt_key);
+        this.data.map((d) => {
+            if (this.dataDict[d.tt_key].hasChild) {
+                this.collapsed.add(d.tt_key);
             }
         });
+
         this.$el.find("tbody tr.has-child").removeClass("open");
         return this
     };
@@ -247,11 +251,11 @@
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
 
-        this.displayedRows = this.dt.rows((idx, data) => {
-            return !hasParent(this, data["tt_key"], parentRegex);
-        }).eq(0);
-        
         $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
+
+        this.displayedRows = this.dt.rows((idx, data) => {
+            return !hasParent(this, data["tt_key"], parentRegex)
+        }).eq(0);
 
         const self = this;
         const ttSearch = function (settings, data, dataIndex) {

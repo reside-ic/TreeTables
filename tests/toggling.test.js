@@ -269,56 +269,6 @@ test('can expand all rows and then toggle one', () => {
 
 });
 
-test('can expand or collapse lots of rows in less than half a second', () => {
-
-    let i = 1;
-    const fakeData = [];
-    while (i < 300) {
-        fakeData.push(
-            {"tt_key": i, "tt_parent": 0, name: "parent" + i},
-            {"tt_key": i + 1, "tt_parent": i, name: "child" + i},
-            {"tt_key": i + 2, "tt_parent": i + 1, name: "grandchild" + i}
-        );
-        i = i + 3
-    }
-
-    const $table = $(document.createElement('table'));
-    $table.append($(headers));
-
-    const start = window.performance.now();
-
-    $table.treeTable({
-        data: fakeData,
-        columns: [{data: "name"}],
-        collapsed: true,
-        order: [[1, 'asc']],
-        pageLength: 50
-    });
-
-    let rendered = window.performance.now();
-
-    expect(rendered - start).toBeLessThan(500);
-
-    $table.data('treeTable')
-        .expandAllRows()
-        .redraw();
-
-    const expanded = window.performance.now();
-
-    expect($table.find("tbody tr").length).toBe(50);
-    expect(expanded - rendered).toBeLessThan(500);
-
-    $table.data('treeTable')
-        .collapseAllRows()
-        .redraw();
-
-    const collapsed = window.performance.now();
-
-    expect($table.find("tbody tr").length).toBe(50);
-    expect(collapsed - expanded).toBeLessThan(500);
-});
-
-
 test('can toggle one row then expand all', () => {
 
     const fakeData = [
