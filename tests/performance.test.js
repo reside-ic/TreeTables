@@ -52,7 +52,7 @@ test('100 parent rows with children and grandchildren', () => {
         i = i + 3
     }
 
-    testRenderExpandAndCollapse(fakeData, 1200)
+    testRenderExpandAndCollapse(fakeData, 1200, 200)
 });
 
 test('200 parent rows with children and grandchildren', () => {
@@ -68,7 +68,7 @@ test('200 parent rows with children and grandchildren', () => {
         i = i + 3
     }
 
-    testRenderExpandAndCollapse(fakeData, 1200)
+    testRenderExpandAndCollapse(fakeData, 1200, 200)
 });
 
 test('1000 parent rows with children and grandchildren', () => {
@@ -102,10 +102,28 @@ test('100 parent rows with 5 children each', () => {
         i = i + 5
     }
 
-    testRenderExpandAndCollapse(fakeData)
+    testRenderExpandAndCollapse(fakeData, 500)
 });
 
-test('10 parent rows with 3 generations of 2 children', () => {
+test('1000 parent rows with 5 children each', () => {
+
+    let i = 1;
+    const fakeData = [];
+    while (i < 6000) {
+        fakeData.push(
+            {"tt_key": i, "tt_parent": 0, name: "parent" + i},
+            {"tt_key": i + 1, "tt_parent": i, name: "child" + i + 1},
+            {"tt_key": i + 2, "tt_parent": i, name: "child" + i + 2},
+            {"tt_key": i + 3, "tt_parent": i, name: "child" + i + 3},
+            {"tt_key": i + 4, "tt_parent": i, name: "child" + i + 4}
+        );
+        i = i + 5
+    }
+
+    testRenderExpandAndCollapse(fakeData, 3000, 500)
+});
+
+test('40 parent rows with 3 generations of 2 children each', () => {
 
     let i = 1;
     const fakeData = [];
@@ -130,5 +148,5 @@ test('10 parent rows with 3 generations of 2 children', () => {
         i = i + 15
     }
 
-    testRenderExpandAndCollapse(fakeData)
+    testRenderExpandAndCollapse(fakeData, 500)
 });
