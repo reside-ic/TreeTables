@@ -237,13 +237,15 @@
 
     TreeTable.prototype.redraw = function () {
 
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttExpanded");
+
         if (this.collapsed.size === 0)
         {
-            $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
             this.displayedRows = this.dt.rows().eq(0);
             this.dt.draw();
             return
         }
+
         let regex = "^(0";
         this.collapsed.forEach(function (value) {
             regex = regex + "|" + value;
@@ -251,18 +253,16 @@
         regex = regex + ")$";
         const parentRegex = new RegExp(regex);
 
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttSearch");
-
         this.displayedRows = this.dt.rows((idx, data) => {
             return !hasParent(this, data["tt_key"], parentRegex)
         }).eq(0);
 
         const self = this;
-        const ttSearch = function (settings, data, dataIndex) {
+        const ttExpanded = function (settings, data, dataIndex) {
             return self.displayedRows.indexOf(dataIndex) > -1
         };
 
-        $.fn.dataTable.ext.search.push(ttSearch);
+        $.fn.dataTable.ext.search.push(ttExpanded);
         this.dt.draw();
     };
 
