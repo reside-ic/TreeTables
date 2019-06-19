@@ -3,10 +3,10 @@ require('datatables.net')(window, $);
 require("../treeTable")(window, $);
 
 const fakeData = [
-    {"tt_key": 1, "tt_parent": 0, name: "first-parent"},
-    {"tt_key": 2, "tt_parent": 1, name: "first-child"},
-    {"tt_key": 3, "tt_parent": 2, name: "second-child"},
-    {"tt_key": 4, "tt_parent": 0, name: "no-children"}];
+    {"tt_key": 4, "tt_parent": 0, name: "first-parent"},
+    {"tt_key": 5, "tt_parent": 4, name: "first-child"},
+    {"tt_key": 6, "tt_parent": 5, name: "second-child"},
+    {"tt_key": 7, "tt_parent": 0, name: "no-children"}];
 
 const headers = "<thead><th>Name</th></thead>";
 
