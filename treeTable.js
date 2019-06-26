@@ -91,11 +91,10 @@
     }
 
     function buildSearchObject (self, key, col, data) {
-
         const children = self.dataDict[key].children;
-        return String(data) + "," + children.map((c) => {
+        return [data].concat(children.map((c) => {
             return buildSearchObject(self, c.tt_key, col, c[col])
-        });
+        }));
     }
 
     if (!$.fn.dataTable) throw new Error('treeTable requires datatables.net');
