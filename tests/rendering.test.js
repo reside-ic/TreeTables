@@ -63,3 +63,118 @@ test("can render with null data", () => {
     });
 
 });
+
+test("can render ajax data from simple ajax source", (done) => {
+
+    const fakeData = {
+        "data": [
+            {"tt_key": 1, "tt_parent": 0, "name": "e"},
+            {"tt_key": 2, "tt_parent": 0, "name": "f"}
+        ]
+    };
+
+    $.ajax = jest.fn().mockImplementation((params) => {
+        return Promise.resolve(params.success(fakeData));
+    });
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        ajax: "fakeData.json",
+        columns: [
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+    setTimeout(() => {
+        expect($.ajax.mock.calls.length).toBe(1);
+        expect($.ajax.mock.calls[0][0].url).toBe("fakeData.json");
+        const $dummy = $("#dummy-wrapper table");
+        const oSettings = $dummy.dataTable().fnSettings();
+        $dummy.trigger("xhr.dt", [oSettings, oSettings.json]);
+        setTimeout(() => {
+            expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("f");
+            expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("e");
+            done();
+        });
+    });
+
+});
+
+test("can render ajax data from object ajax source", (done) => {
+
+    const fakeData = {
+        "test": [
+            {"tt_key": 1, "tt_parent": 0, "name": "c"},
+            {"tt_key": 2, "tt_parent": 0, "name": "d"}
+        ]
+    };
+
+    $.ajax = jest.fn().mockImplementation((params) => {
+        return Promise.resolve(params.success(fakeData));
+    });
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        ajax: {url: "fakeData.json", dataSrc: "test"},
+        columns: [
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+    setTimeout(() => {
+        expect($.ajax.mock.calls.length).toBe(1);
+        expect($.ajax.mock.calls[0][0].url).toBe("fakeData.json");
+        const $dummy = $("#dummy-wrapper table");
+        const oSettings = $dummy.dataTable().fnSettings();
+        $dummy.trigger("xhr.dt", [oSettings, oSettings.json]);
+        setTimeout(() => {
+            expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("d");
+            expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("c");
+            done();
+        });
+    });
+
+});
+
+test("can render ajax data from function ajax source", (done) => {
+
+    const fakeData = {
+        "data": [
+            {"tt_key": 1, "tt_parent": 0, "name": "a"},
+            {"tt_key": 2, "tt_parent": 0, "name": "b"}
+        ]
+    };
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        ajax: () => fakeData,
+        columns: [
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+    setTimeout(() => {
+        const $dummy = $("#dummy-wrapper table");
+        const oSettings = $dummy.dataTable().fnSettings();
+        $dummy.trigger("xhr.dt", [oSettings, oSettings.jqXHR]);
+        setTimeout(() => {
+            expect($($table.find("tbody tr")[0]).find("td")[1].textContent).toBe("b");
+            expect($($table.find("tbody tr")[1]).find("td")[1].textContent).toBe("a");
+            done();
+        });
+
+    });
+
+});

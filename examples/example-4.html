@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../node_modules/datatables.net-dt/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="../tree-table.css"/>
+</head>
+<body>
+<table id="test-table" width="100%">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Salary</th>
+    </tr>
+    </thead>
+</table>
+</body>
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/datatables.net/js/jquery.dataTables.js"></script>
+<script src="../treeTable.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#test-table').treeTable({
+            "ajax": "fakeData.json",
+            "collapsed": false,
+            "columns": [
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "salary",
+                    render: function (data) {
+                        return "£" + data;
+                    }
+                }
+            ],
+            "order": [[1, 'desc']]
+        });
+
+    })
+</script>
+</html>

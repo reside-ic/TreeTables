@@ -4,8 +4,7 @@
         define(['jquery', 'datatables.net'], function ($, dt) {
             return factory(dt.$, window, document);
         });
-    }
-    else if (typeof exports === 'object') {
+    } else if (typeof exports === 'object') {
         // CommonJS
         module.exports = function (root, $) {
             if (!root) {
@@ -18,8 +17,7 @@
 
             return factory($, root, root.document);
         };
-    }
-    else {
+    } else {
         // Browser
         factory(jQuery, window, document);
     }
@@ -55,7 +53,7 @@
         }
     }
 
-    function level (self, key) {
+    function level(self, key) {
         if (key === 0) {
             return 1
         }
@@ -90,7 +88,7 @@
         return parent;
     }
 
-    function buildSearchObject (self, key, col, data) {
+    function buildSearchObject(self, key, col, data) {
         const children = self.dataDict[key].children;
         return [data].concat(children.map((c) => {
             return buildSearchObject(self, c.tt_key, col, c[col])
@@ -108,7 +106,7 @@
     };
 
     function createDataDict(data) {
-       return data.reduce(function(map, obj) {
+        return data.reduce(function (map, obj) {
             obj.children = data.filter((d) => d["tt_parent"] === obj.tt_key);
             obj.hasChild = obj.children.length > 0;
             map[obj.tt_key] = obj;
@@ -118,21 +116,46 @@
 
     const TreeTable = function (element, options) {
         const self = this;
+        this.$el = $(element);
+        if (options.data) {
+            this.init(options);
+        } else if (options.ajax) {
+            this.$dummy = $("<table></table>");
+            this.$dummyWrapper = $('<div id="dummy-wrapper" style="display:none"></div>');
+
+            $("body").append(this.$dummyWrapper);
+            this.$dummyWrapper.append(this.$dummy);
+            this.$dummy.DataTable({ajax: options.ajax, columns: options.columns});
+
+            this.$dummy.on('xhr.dt', function (e, settings, json, xhr) {
+                self.$dummy.DataTable().destroy();
+                self.$dummy.parent().remove();
+                options.data = $.fn.dataTableExt.internal._fnAjaxDataSrc(settings, json);
+                options.ajax = null;
+                self.init(options);
+            });
+        }
+    };
+
+    TreeTable.prototype.init = function (options) {
+        const self = this;
+
         this.collapsed = new Set([]);
 
         this.data = options.data;
         this.dataDict = createDataDict(options.data);
+
         this.displayedRows = [];
 
-        this.$el = $(element);
         this.dt = null;
+
         const initialOrder = options.order;
         options.order = [];
         options.columns = options.columns || [];
         options.columns.map((col) => {
             const oldRender = col.render;
             col.render = function (data, type, full, meta) {
-                switch(type){
+                switch (type) {
                     case "sort":
                         return buildOrderObject(self, full["tt_key"], col["data"]).child;
                     case "filter":
@@ -168,7 +191,7 @@
         options.createdRow = function (row, data) {
             let cssClass = "";
             if (self.dataDict[data.tt_key].hasChild) {
-               cssClass += " has-child ";
+                cssClass += " has-child ";
             }
             if (data.tt_parent > 0) {
                 cssClass += " has-parent";
@@ -186,8 +209,7 @@
 
         if (options.collapsed) {
             this.collapseAllRows();
-        }
-        else {
+        } else {
             this.expandAllRows();
         }
 
@@ -238,8 +260,7 @@
 
         $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter((it, i) => it.name !== "ttExpanded");
 
-        if (this.collapsed.size === 0)
-        {
+        if (this.collapsed.size === 0) {
             this.displayedRows = this.dt.rows().eq(0);
             this.dt.draw();
             return
