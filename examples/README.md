@@ -9,3 +9,5 @@ styling can be customised
 
 `example-3.html` is styled with Bootstrap and also demonstrates how
 to implement buttons which collapse/expand all rows when clicked.
+
+`example-4.html` shows an example using an ajax data source

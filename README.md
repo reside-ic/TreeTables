@@ -9,6 +9,8 @@ popular [DataTables](https://github.com/DataTables/DataTables) plugin.
 DataTables does not support tree data by default, so this plugin adds
 that support.
 
+Please note that TreeTables does *not* support server-side processing.
+
 ![Screenshot of plugin in use](screenshot.png)
 
 ## Installation options
@@ -56,7 +58,7 @@ Data provided to the table must include the following fields:
 * tt_parent: number - the key of this row's parent row
 
 ## Options
-TreeTable options are all DataTable options plus:
+TreeTable options are most DataTable options plus:
 * collapsed: bool - whether to start with all child rows collapsed
 
 ```
@@ -119,6 +121,11 @@ To collapse all rows:
     $('#myTable').data('treeTable')
                     .collapseAllRows()
                     .redraw();
+
+## Ajax data sources
+TreeTables has minimal support for ajax data sources. The `ajax` option can be used as per the
+[DataTables documentation](https://datatables.net/reference/option/ajax), but it does *not* support server-side processing,
+ and it does *not* support the ajax related API methods: `ajax.json()`, `ajax.reload()`, `ajax.url()`
 
 ## Examples
 See [examples/README.md](examples/README.md)
