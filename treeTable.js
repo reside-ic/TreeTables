@@ -130,9 +130,11 @@
             this.$dummy.on('xhr.dt', function (e, settings, json, xhr) {
                 self.$dummy.DataTable().destroy();
                 self.$dummy.parent().remove();
-                options.data = $.fn.dataTableExt.internal._fnAjaxDataSrc(settings, json);
-                options.ajax = null;
-                self.init(options);
+                if (json != null) {
+                    options.data = $.fn.dataTableExt.internal._fnAjaxDataSrc(settings, json);
+                    options.ajax = null;
+                    self.init(options);
+                }
             });
         }
     };

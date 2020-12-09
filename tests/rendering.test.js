@@ -178,3 +178,39 @@ test("can render ajax data from function ajax source", (done) => {
     });
 
 });
+
+test("DataTables error is shown if ajax request fails", (done) => {
+
+    $.ajax = jest.fn().mockImplementation((params) => {
+        return Promise.resolve(params.error({readyState: 4}));
+    });
+
+    window.alert = jest.fn();
+
+    const $table = $(document.createElement('table'));
+    $table.append($(headers));
+
+    $table.treeTable({
+        ajax: "whatever",
+        columns: [
+            {data: "name"}
+        ],
+        collapsed: false,
+        order: [1, "desc"]
+    });
+
+    setTimeout(() => {
+        const $dummy = $("#dummy-wrapper table");
+        const oSettings = $dummy.dataTable().fnSettings();
+        $dummy.trigger("xhr.dt", [oSettings, oSettings.json, oSettings.jqXHR]);
+        setTimeout(() => {
+            // expect the DataTables error alert to be fired
+            expect(window.alert.mock.calls.length).toBe(1);
+            expect(window.alert.mock.calls[0][0]).toContain("Ajax error");
+            expect($($table.find("tbody tr")[0]).find("td").length).toBe(0);
+            done();
+        });
+
+    });
+
+});
