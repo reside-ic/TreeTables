@@ -120,6 +120,8 @@
         if (options.data) {
             this.init(options);
         } else if (options.ajax) {
+            // here create a dummy DataTable using the provided ajax source so that we can use
+            // DataTables internal logic to retrieve json and handle any ajax errors
             this.$dummy = $("<table></table>");
             this.$dummyWrapper = $('<div id="dummy-wrapper" style="display:none"></div>');
 
@@ -131,6 +133,8 @@
                 self.$dummy.DataTable().destroy();
                 self.$dummy.parent().remove();
                 if (json != null) {
+                    // calling this internal method retrieves data from the json in accordance with
+                    // provided DataTable ajax options - https://datatables.net/reference/option/ajax
                     options.data = $.fn.dataTableExt.internal._fnAjaxDataSrc(settings, json);
                     options.ajax = null;
                     self.init(options);
