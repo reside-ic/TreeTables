@@ -106,8 +106,17 @@
     };
 
     function createDataDict(data) {
+        const children = data.reduce(function (map, obj) {
+            if (obj.tt_parent) {
+                if (!map[obj.tt_parent]) {
+                    map[obj.tt_parent] = [];
+                }
+                map[obj.tt_parent].push(obj);
+            }
+            return map;
+        }, {});
         return data.reduce(function (map, obj) {
-            obj.children = data.filter((d) => d["tt_parent"] === obj.tt_key);
+            obj.children = children[obj.tt_key] || [];
             obj.hasChild = obj.children.length > 0;
             map[obj.tt_key] = obj;
             return map;
