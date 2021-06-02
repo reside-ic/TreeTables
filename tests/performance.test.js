@@ -105,11 +105,11 @@ test('100 parent rows with 5 children each', () => {
     testRenderExpandAndCollapse(fakeData, 500)
 });
 
-test('1000 parent rows with 5 children each', () => {
+test('4000 parent rows with 5 children each', () => {
 
     let i = 1;
     const fakeData = [];
-    while (i < 6000) {
+    while (i < 24000) {
         fakeData.push(
             {"tt_key": i, "tt_parent": 0, name: "parent" + i},
             {"tt_key": i + 1, "tt_parent": i, name: "child" + i + 1},
@@ -120,7 +120,7 @@ test('1000 parent rows with 5 children each', () => {
         i = i + 5
     }
 
-    testRenderExpandAndCollapse(fakeData, 3000, 500)
+    testRenderExpandAndCollapse(fakeData, 6000, 750)
 });
 
 test('40 parent rows with 3 generations of 2 children each', () => {
